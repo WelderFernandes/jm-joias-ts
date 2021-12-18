@@ -1,7 +1,15 @@
-import type { NextPage } from 'next'
+import * as React from 'react'
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
 
-const Home: NextPage = () => {
-  return <h1>Teste</h1>
+export default function BasicButtons() {
+  return (
+    <Stack spacing={2} direction="row">
+      <Button variant="text">Text</Button>
+      <Button variant="contained">Contained</Button>
+      <Button variant="outlined" color="secondary">
+        Outlined
+      </Button>
+    </Stack>
+  )
 }
-
-export default Home
