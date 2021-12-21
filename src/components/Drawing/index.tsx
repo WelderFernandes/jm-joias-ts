@@ -11,7 +11,7 @@ function Drawing({ children, anchor, title }) {
   }
 
   return (
-    <>
+    <div>
       <Fab
         color="secondary"
         aria-label="add"
@@ -42,7 +42,7 @@ function Drawing({ children, anchor, title }) {
         </Box>
         <Button onClick={toggleDrawer(false)}>Fechar</Button>
       </Drawer>
-    </>
+    </div>
   )
 }
 
