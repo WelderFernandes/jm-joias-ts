@@ -33,7 +33,7 @@ type SidebarProps = {
   index?: number
   name: string
   url: string
-  icon: React.ComponentType<any>
+  icon: React.ComponentType<{}>
   active?: boolean
 }
 
@@ -60,8 +60,8 @@ function Layout({ children, title }: LayoutProps) {
     }
   })
 
-  const isSelected = (item: SidebarProps) => {
-    return router.pathname === item.url
+  const isSelected = (url: string) => {
+    return router.pathname === url
   }
 
   const drawer = (
@@ -94,8 +94,8 @@ function Layout({ children, title }: LayoutProps) {
                 sx={[
                   {
                     color: '#fff',
-                    opacity: isSelected(item) ? 1 : 0.5,
-                    borderRight: isSelected(item) ? '3px solid #fff' : ''
+                    opacity: isSelected(item.url) ? 1 : 0.5,
+                    borderRight: isSelected(item.url) ? '3px solid #fff' : ''
                   },
                   {
                     '&:hover': {
