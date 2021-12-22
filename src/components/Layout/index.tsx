@@ -20,11 +20,17 @@ import Link from 'next/link'
 import format from 'date-fns/format'
 import ptBR from 'date-fns/locale/pt-BR'
 import Image from 'next/image'
+import { ReactNode } from 'react'
 import { useRouter } from 'next/router'
 
 const drawerWidth = 240
 
-function Layout({ children, title }, props) {
+type LayoutProps = {
+  children?: ReactNode
+  title?: string
+}
+
+function Layout({ children, title }: LayoutProps, props) {
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const router = useRouter()
