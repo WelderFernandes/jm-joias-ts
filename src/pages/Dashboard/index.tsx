@@ -4,7 +4,9 @@ import Layout from '../../components/Layout'
 export default function Product() {
   return (
     <>
-      <Layout title="Home"></Layout>
+      <Layout>
+        <h1>Dashboard</h1>
+      </Layout>
     </>
   )
 }
