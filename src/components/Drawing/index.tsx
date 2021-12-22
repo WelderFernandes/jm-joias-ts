@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, ReactNode } from 'react'
 import { Button, Container, Drawer, Fab, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
 
-function Drawing({ children, anchor, title }) {
+type DrawingProps = {
+  children: ReactNode
+}
+
+function Drawing({ children }: DrawingProps, title: string, anchor: string) {
   const [state, setState] = useState(false)
 
   const toggleDrawer = open => () => {
