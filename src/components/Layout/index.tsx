@@ -19,7 +19,7 @@ import Link from 'next/link'
 import format from 'date-fns/format'
 import ptBR from 'date-fns/locale/pt-BR'
 import Image from 'next/image'
-import { ReactNode } from 'react'
+import { ReactNode, ReactPropTypes } from 'react'
 import { useRouter } from 'next/router'
 
 const drawerWidth = 240
@@ -37,8 +37,8 @@ type SidebarProps = {
   active?: boolean
 }
 
-function Layout({ children, title }: LayoutProps, props) {
-  const { window } = props
+function Layout({ children, title }: LayoutProps) {
+  // const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const router = useRouter()
 
@@ -49,8 +49,8 @@ function Layout({ children, title }: LayoutProps, props) {
     locale: ptBR
   })
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined
+  // const container =
+  //   window !== undefined ? () => window().document.body : undefined
 
   const theme = createTheme({
     palette: {
@@ -180,7 +180,7 @@ function Layout({ children, title }: LayoutProps, props) {
         >
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Drawer
-            container={container}
+            // container={container}
             variant="temporary"
             open={mobileOpen}
             onClose={handleDrawerToggle}
