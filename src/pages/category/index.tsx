@@ -7,7 +7,7 @@ function Category() {
   return (
     <Layout>
       <h1>Category</h1>
-      <Drawing anchor="bottom" title="Cadastrar">
+      <Drawing anchor="bottom">
         <CreateCategory />
       </Drawing>
     </Layout>
