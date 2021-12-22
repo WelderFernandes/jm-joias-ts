@@ -7,7 +7,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
-function CreateCategory() {
+
+function StoreCategory() {
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
   function handleClick() {
@@ -52,7 +53,7 @@ function CreateCategory() {
             type={'text'}
           />
         </Grid>
-        <Grid item mt={2}>
+        <Grid item mt={0}>
           <FormControl>
             <InputLabel id="demo-simple-select-autowidth-label">
               Status
@@ -98,4 +99,4 @@ function CreateCategory() {
   )
 }
 
-export default CreateCategory
+export default StoreCategory

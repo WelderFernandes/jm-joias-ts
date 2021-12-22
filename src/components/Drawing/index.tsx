@@ -52,7 +52,7 @@ export default function TemporaryDrawer({
             keepMounted: true // Better open performance on mobile.
           }}
         >
-          <Typography variant="h4" component="h4" align="center" m={2}>
+          <Typography variant="h4" component="h4" align="center" mt={6}>
             {title}
           </Typography>
           {children}

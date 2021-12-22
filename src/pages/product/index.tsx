@@ -21,8 +21,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 import Layout from '../../components/Layout'
-import { Fab } from '@mui/material'
 import Drawing from '../../components/Drawing'
+import StoreProduct from './store'
 
 interface Data {
   calories: number
@@ -336,9 +336,9 @@ export default function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
   return (
-    <Layout title="Produtos">
-      <Drawing anchor="right" title="Cadastrar">
-        <h2>Teste</h2>
+    <Layout>
+      <Drawing anchor="right" title="Cadastrar de Produtos">
+        <StoreProduct />
       </Drawing>
       <Box sx={{ width: '100%' }}>
         <Paper sx={{ width: '100%', mb: 2 }}>
