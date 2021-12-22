@@ -22,12 +22,21 @@ import ptBR from 'date-fns/locale/pt-BR'
 import Image from 'next/image'
 import { ReactNode } from 'react'
 import { useRouter } from 'next/router'
+import { borderRight } from '@mui/material/node_modules/@mui/system'
 
 const drawerWidth = 240
 
 type LayoutProps = {
   children?: ReactNode
   title?: string
+}
+
+type SidebarProps = {
+  index?: number
+  name: string
+  url: string
+  icon: React.ComponentType<any>
+  active?: boolean
 }
 
 function Layout({ children, title }: LayoutProps, props) {
@@ -52,11 +61,8 @@ function Layout({ children, title }: LayoutProps, props) {
       }
     }
   })
-  const myLoader = ({ src, width, quality }) => {
-    return `https://example.com/${src}?w=${width}&q=${quality || 75}`
-  }
 
-  const isSelected = item => {
+  const isSelected = (item: SidebarProps) => {
     return router.pathname === item.url
   }
 
@@ -87,20 +93,18 @@ function Layout({ children, title }: LayoutProps, props) {
             <Link href={item.url} key={index}>
               <ListItem
                 button={true}
-                key={item.index}
                 sx={[
                   {
-                    color: isSelected(item) ? '#161624' : '',
-                    background: isSelected(item) ? '#fff' : '',
-                    borderRadius: '25px'
+                    color: '#fff',
+                    opacity: isSelected(item) ? 1 : 0.5,
+                    borderRight: isSelected(item) ? '3px solid #fff' : ''
                   },
-                  theme => ({
+                  {
                     '&:hover': {
-                      color: '#161624',
-                      background: 'white',
+                      color: '#fff',
                       opacity: 0.5
                     }
-                  })
+                  }
                 ]}
                 onClick={() => {
                   setMobileOpen(false)
@@ -108,7 +112,7 @@ function Layout({ children, title }: LayoutProps, props) {
               >
                 <ListItemIcon
                   sx={{
-                    color: isSelected(item) ? '#161624' : 'white'
+                    color: 'white'
                   }}
                 >
                   {item.icon}
