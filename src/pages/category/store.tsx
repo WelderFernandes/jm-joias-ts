@@ -27,12 +27,13 @@ function StoreCategory() {
   const [loading, setLoading] = useState(false)
 
   const [values, setValues] = useState({})
+  console.log(values)
 
   const handleChange = (event: SelectChangeEvent) => {
     const { name, value } = event.target
-    console.log({ name, value })
-
     setStatus(name === 'status' ? value : status)
+
+    setValues({ ...values, [name]: value })
   }
 
   function handleClick() {
