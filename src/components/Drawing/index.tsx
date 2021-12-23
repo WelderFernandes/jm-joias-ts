@@ -68,19 +68,20 @@ export default function TemporaryDrawer({
                 onClick={toggleDrawer(anchor, false)}
                 sx={{
                   backgroundColor: 'white',
-                  borderRadius: '50%'
+                  borderRadius: '50%',
+                  color: '#161624'
                 }}
               >
-                <ArrowCircleLeftOutlinedIcon fontSize="large" />
+                <ArrowCircleLeftOutlinedIcon fontSize="medium" />
               </Button>
             </Box>
             <Box>
-              <Typography variant="boddy2" component="h4">
+              <Typography variant="h6" component="h4">
                 {title}
               </Typography>
             </Box>
             <Box>
-              <Typography variant="boddy2" component="h4"></Typography>
+              <Typography variant="body2"></Typography>
             </Box>
           </Box>
           {children}
