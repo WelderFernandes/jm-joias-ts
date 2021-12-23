@@ -4,45 +4,62 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { useState } from 'react'
+import { ChangeEvent, ChangeEventHandler, FormEvent, useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
+
+type CategoryStoreProps = {
+  name: string
+  description: string
+  slug: string
+  status: number
+}
+
+const initialValues: CategoryStoreProps = {
+  name: '',
+  slug: '',
+  description: '',
+  status: 0
+}
 
 function StoreCategory() {
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const [values, setValues] = useState({})
+
+  const handleChange = (event: SelectChangeEvent) => {
+    const { name, value } = event.target
+    console.log({ name, value })
+
+    setStatus(name === 'status' ? value : status)
+  }
+
   function handleClick() {
     setLoading(true)
   }
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value)
-  }
   return (
     <Box
       component="form"
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-        flexGrow: 1,
+        '& .MuiTextField-root': { m: 0, width: '25ch' },
         mt: '2rem'
       }}
       noValidate
       autoComplete="off"
     >
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={2}
-        mb={3}
-      >
+      <Grid container direction="column" alignItems="center" spacing={1} mb={4}>
         <Grid item>
           <TextField
-            id="outlined-basic"
+            id="name"
+            name="name"
             label="Nome"
             variant="outlined"
             type={'text'}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              handleChange(event)
+            }}
           />
         </Grid>
         <Grid item>
@@ -50,23 +67,27 @@ function StoreCategory() {
             id="outlined-basic"
             label="Slug"
             variant="outlined"
+            name="slug"
             type={'text'}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              handleChange(event)
+            }}
           />
         </Grid>
         <Grid item mt={0}>
           <FormControl>
-            <InputLabel id="demo-simple-select-autowidth-label">
-              Status
-            </InputLabel>
+            <InputLabel id="status">Status</InputLabel>
             <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
+              labelId="status"
+              id="status"
               value={status}
-              onChange={handleChange}
-              autoWidth
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChange(event)
+              }}
+              name="status"
               label="Status"
               sx={{
-                width: '22ch'
+                width: '14rem'
               }}
             >
               <MenuItem value={1}>Ativo</MenuItem>

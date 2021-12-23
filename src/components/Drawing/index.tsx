@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import { Button, Drawer, Typography } from '@mui/material'
 import { Container, Fab } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined'
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right'
 
@@ -29,7 +30,7 @@ export default function TemporaryDrawer({
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Box>
         <Fab
           color="secondary"
@@ -52,18 +53,37 @@ export default function TemporaryDrawer({
             keepMounted: true // Better open performance on mobile.
           }}
         >
-          <Typography variant="h4" component="h4" align="center" mt={6}>
-            {title}
-          </Typography>
-          {children}
-          <Button
+          <Box
+            component="div"
+            mt={2}
             sx={{
-              margin: '2rem auto'
+              display: 'flex',
+              justifyContent: 'stretch',
+              alignItems: 'center',
+              minWidth: '22rem'
             }}
-            onClick={toggleDrawer(anchor, false)}
           >
-            Fechar
-          </Button>
+            <Box>
+              <Button
+                onClick={toggleDrawer(anchor, false)}
+                sx={{
+                  backgroundColor: 'white',
+                  borderRadius: '50%'
+                }}
+              >
+                <ArrowCircleLeftOutlinedIcon fontSize="large" />
+              </Button>
+            </Box>
+            <Box>
+              <Typography variant="boddy2" component="h4">
+                {title}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="boddy2" component="h4"></Typography>
+            </Box>
+          </Box>
+          {children}
         </Drawer>
       </Box>
     </Container>
