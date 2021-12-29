@@ -127,10 +127,8 @@ function StoreCategory() {
               {...register('status', { required: true })}
               labelId="status"
               id="status"
+              onChange={handleChange}
               value={status}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChange(event)
-              }}
               name="status"
               label="Status"
               sx={{
