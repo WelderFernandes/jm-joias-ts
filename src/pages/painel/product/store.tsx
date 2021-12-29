@@ -83,17 +83,7 @@ function StoreProduct() {
                   name="weight"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="description"
-                  multiline
-                  fullWidth
-                  rows={4}
-                  id="description"
-                  label="Descrição"
-                  name="description"
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
