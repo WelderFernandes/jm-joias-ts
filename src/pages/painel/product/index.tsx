@@ -20,9 +20,11 @@ import Switch from '@mui/material/Switch'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
-import Layout from '../../components/Layout'
-import Drawing from '../../components/Drawing'
+import { Layout } from '../../../components/Layout'
+import Drawing from '../../../components/Drawing'
 import StoreProduct from './store'
+import { GetServerSideProps } from 'next'
+import { parseCookies } from 'nookies'
 
 interface Data {
   calories: number
@@ -429,4 +431,19 @@ export default function EnhancedTable() {
       </Box>
     </Layout>
   )
+}
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  // const apiClient = getApiClient(ctx)
+  const { ['memeli.token']: token } = parseCookies(ctx)
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: {}
+  }
 }

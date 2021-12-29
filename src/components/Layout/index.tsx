@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useContext, useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -21,6 +21,7 @@ import ptBR from 'date-fns/locale/pt-BR'
 import Image from 'next/image'
 import { ReactNode, ReactPropTypes } from 'react'
 import { useRouter } from 'next/router'
+import { AuthContext } from '../../contexts/AuthContext'
 
 const drawerWidth = 240
 
@@ -37,10 +38,11 @@ type SidebarProps = {
   active?: boolean
 }
 
-function Layout({ children, title }: LayoutProps) {
-  // const { window } = props
-  const [mobileOpen, setMobileOpen] = React.useState(false)
+export function Layout({ children, title }: LayoutProps) {
+  const [mobileOpen, setMobileOpen] = useState(false)
   const router = useRouter()
+
+  const { user } = useContext(AuthContext)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -48,9 +50,6 @@ function Layout({ children, title }: LayoutProps) {
   const currentDate = format(new Date(), 'EEEEEE, d MMMM', {
     locale: ptBR
   })
-
-  // const container =
-  //   window !== undefined ? () => window().document.body : undefined
 
   const theme = createTheme({
     palette: {
@@ -159,7 +158,7 @@ function Layout({ children, title }: LayoutProps) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap component="div">
-              {title}
+              Olá, {user?.name}
             </Typography>
             <Typography
               variant="body1"
@@ -231,5 +230,3 @@ function Layout({ children, title }: LayoutProps) {
     </>
   )
 }
-
-export default Layout

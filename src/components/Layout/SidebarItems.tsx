@@ -8,26 +8,26 @@ export const SidebarItems = [
   {
     name: 'Dashboard',
     icon: <HomeRoundedIcon />,
-    url: '/Dashboard'
+    url: '/painel'
   },
   {
     name: 'Produtos',
     icon: <ProductionQuantityLimitsRoundedIcon />,
-    url: '/product'
+    url: '/painel/product'
   },
   {
     name: 'Categoria',
     icon: <CategoryRoundedIcon />,
-    url: '/category'
+    url: '/painel/category'
   },
   {
     name: 'Revendedor',
     icon: <StorefrontRoundedIcon />,
-    url: '/'
+    url: '/painel/dealer'
   },
   {
     name: 'Fornecedor',
     icon: <AddShoppingCartRoundedIcon />,
-    url: '/'
+    url: '/painel/provider'
   }
 ]
