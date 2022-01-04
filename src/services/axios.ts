@@ -5,7 +5,7 @@ export function getApiClient(ctx?: any) {
   const { 'memeli.token': token } = parseCookies(ctx)
 
   const api = axios.create({
-    baseURL: 'http://jm-joias.rmsolucoestecnologicas.com.br/'
+    baseURL: 'https://jm-joias.rmsolucoestecnologicas.com.br/'
   })
 
   if (token) {
