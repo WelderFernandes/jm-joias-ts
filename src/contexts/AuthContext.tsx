@@ -56,14 +56,10 @@ export function AuthProvider({ children }: AuthProps) {
   }, [])
 
   async function signIn({ email, password }: SignInData) {
-    const { data, message, errors }: SignInProps = await api.post(
-      '/api/login',
-      {
-        email,
-        password
-      }
-    )
-    console.log(message, errors)
+    const { data }: SignInProps = await api.post('/api/login', {
+      email,
+      password
+    })
 
     setCookie(undefined, 'memeli.token', data.token, {
       maxAge: 30 * 24 * 60 * 60

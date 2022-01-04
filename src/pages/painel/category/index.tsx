@@ -1,40 +1,48 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useState, SyntheticEvent, forwardRef } from 'react'
 import Drawing from '../../../components/Drawing'
 import { Layout } from '../../../components/Layout'
 import StoreCategory from './store'
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid'
-import { api } from '../../../services/api'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
+
+import { CategoryContext } from '../../../contexts/CategoryContext'
+import CustomAlert from '../../../components/Alert'
 
 function Category() {
-  const [dataTable, setDataTable] = useState([])
+  const { categories } = useContext(CategoryContext)
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', editable: true, width: 300 },
     { field: 'slug', headerName: 'Slug', editable: true, width: 300 },
-    { field: 'status', headerName: 'Status', editable: true, width: 300 }
+    { field: 'status', headerName: 'Status', editable: true, width: 300 },
+    {
+      field: 'created_at',
+      headerName: 'Data de Criação',
+      editable: true,
+      width: 300
+    },
+    {
+      field: 'updated_at',
+      headerName: 'Data de Atualização',
+      editable: true,
+      width: 300
+    }
   ]
-
-  useEffect(() => {
-    api.get('/api/category').then(response => {
-      setDataTable(response.data.data)
-    })
-  }, [])
 
   return (
     <Layout>
       <h1>Category</h1>
       <div style={{ height: 500, width: '100%', background: 'white' }}>
         <DataGrid
-          rows={dataTable}
+          rows={categories}
           columns={columns}
           editMode="row"
-          pageSize={10}
           checkboxSelection
         />
       </div>
       <Drawing anchor="right" title="Cadastro de Categoria">
         <StoreCategory />
       </Drawing>
+      <CustomAlert />
     </Layout>
   )
 }
