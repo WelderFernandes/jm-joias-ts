@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { CategoryContext } from '../../../contexts/CategoryContext'
 
 type Category = {
-  id: number
+  id?: number
   name: string
   slug: string
   status: string
@@ -34,7 +34,6 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
   } = useForm()
 
   const initialValues = {
-    id: category.id,
     name: category.name,
     slug: category.slug,
     status: category.status == 'Ativo' ? '1' : '0'
