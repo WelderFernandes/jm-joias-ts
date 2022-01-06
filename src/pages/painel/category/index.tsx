@@ -100,7 +100,7 @@ export default function ControlledSelectionGrid() {
             sx={{ color: 'red', borderColor: 'red' }}
             startIcon={<DeleteIcon />}
             onClick={async () => {
-              const selectedIDs = new Set<number>(selectionModel)
+              const selectedIDs = new Set<any>(selectionModel)
 
               const ids: number[] = []
 
