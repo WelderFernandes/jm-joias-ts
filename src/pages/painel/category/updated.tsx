@@ -16,8 +16,6 @@ type Category = {
   name: string
   slug: string
   status: string
-  updated_at: string
-  created_at: string
 }
 
 type CategoryUpdatedProps = {
@@ -35,13 +33,14 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     formState: { errors }
   } = useForm()
 
-  // const initialValues = {
-  //   name: category.name,
-  //   slug: category.slug,
-  //   status: category.status == 'Ativo' ? '1' : '0'
-  // }
+  const initialValues = {
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    status: category.status == 'Ativo' ? '1' : '0'
+  }
 
-  const [values, setValues] = useState({})
+  const [values, setValues] = useState<Category>(initialValues)
 
   const handleChange = (event: SelectChangeEvent) => {
     const { name, value } = event.target
