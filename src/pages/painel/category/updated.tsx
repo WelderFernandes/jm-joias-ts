@@ -21,11 +21,6 @@ type Category = {
 }
 
 type CategoryUpdatedProps = {
-  id: number
-  name: string
-  slug: string
-  status: number
-  message: string
   category: Category
 }
 
@@ -55,7 +50,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     setValues({ ...values, [name]: value })
   }
 
-  async function handleStore(data: CategoryUpdatedProps) {
+  async function handleStore(data: Category) {
     setLoading(true)
 
     if (data.name === '' || data.slug === '' || data.status === null) {
