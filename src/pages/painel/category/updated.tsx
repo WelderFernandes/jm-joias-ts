@@ -13,7 +13,7 @@ import { CategoryContext } from '../../../contexts/CategoryContext'
 
 type Category = {
   id?: number
-  name: string
+  name?: string
   slug: string
   status: string
 }
