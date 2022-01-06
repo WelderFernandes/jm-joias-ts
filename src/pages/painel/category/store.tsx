@@ -49,6 +49,7 @@ function StoreCategory() {
       slug: data.slug,
       status: data.status
     })
+
     handleAlert({
       message: 'Categoria cadastrada com sucesso!',
       variant: 'success'

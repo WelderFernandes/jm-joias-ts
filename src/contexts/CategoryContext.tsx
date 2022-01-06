@@ -8,10 +8,10 @@ interface CustomAlertProps {
 }
 
 interface Category {
-  id: number
+  id?: number
   name: string
   slug: string
-  status: string
+  status: any
   updated_at: string
   created_at: string
 }
