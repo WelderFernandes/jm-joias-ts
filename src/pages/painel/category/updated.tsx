@@ -15,7 +15,7 @@ type Category = {
   id: number
   name: string
   slug: string
-  status: number | string
+  status: string
   updated_at: string
   created_at: string
 }
