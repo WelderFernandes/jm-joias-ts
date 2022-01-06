@@ -16,7 +16,7 @@ interface Category {
   created_at: string
 }
 
-type CategoryInput = Omit<Category, 'id' | 'updated_at' | 'created_at'>
+type CategoryInput = Omit<Category, 'updated_at' | 'created_at'>
 
 interface CategoryProviderProps {
   children: ReactNode
@@ -25,6 +25,7 @@ interface CategoryProviderProps {
 interface CategoryContextProps {
   categories: Category[]
   createCategories: (category: CategoryInput) => Promise<void>
+  updatedCategories: (category: CategoryInput) => Promise<void>
   handleAlert: (data: CustomAlertProps) => void
 }
 
@@ -40,13 +41,13 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     api.get('/api/category').then(response => {
       // setCategories(response.data.data)
       const newCategory: Array<Category> = []
-      const data: Array<Category> = response.data.data
+      const data: Array<any> = response.data.data
       data.map(category => {
         newCategory.push({
           id: category.id,
           name: category.name,
           slug: category.slug,
-          status: category.status === 1 ? 'Ativo' : 'Inativo',
+          status: category.status == 1 ? 'Ativo' : 'Inativo',
           updated_at: new Intl.DateTimeFormat('pt-BR').format(
             new Date(category.updated_at)
           ),
@@ -62,33 +63,36 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   async function createCategories(categoryInput: CategoryInput) {
     const response = await api.post('/api/category/store', categoryInput)
 
-    const { data: category } = response.data
+    const { data } = response.data
+
+    const category = {
+      id: data.id,
+      name: data.name,
+      slug: data.slug,
+      status: data.status == 1 ? 'Ativo' : 'Inativo',
+      updated_at: new Intl.DateTimeFormat('pt-BR').format(
+        new Date(data.updated_at)
+      ),
+      created_at: new Intl.DateTimeFormat('pt-BR').format(
+        new Date(data.updated_at)
+      )
+    }
 
     setCategories([...categories, category])
   }
 
-  async function deleteCaterory(id: number) {
-    await api.delete(`/api/category/${id}`)
+  async function updatedCategories(categoryInput: CategoryInput) {
+    console.log(categoryInput)
+    const response = await api.put(`/api/category/${categoryInput.id}`, {
+      name: categoryInput.name,
+      slug: categoryInput.slug,
+      status: categoryInput.status === 'Ativo' ? 1 : 0
+    })
 
-    const newCategories = categories.filter(category => category.id !== id)
+    const { data: category } = response.data
 
-    setCategories(newCategories)
+    setCategories([...categories, category])
   }
-
-  async function deleteMultipleCategories(ids: number[]) {
-    await api.delete(`/api/category/multiple/${ids}`)
-
-    const newCategories = categories.filter(
-      category => !ids.includes(category.id)
-    )
-
-    setCategories(newCategories)
-  }
-
-  // async function updateCategory(id: number, categoryInput: CategoryInput) {
-  //   const response = await api.put(`/api/category/${id}`, categoryInput)
-
-  // }
 
   function handleAlert({ message, variant }: CustomAlertProps) {
     enqueueSnackbar(message, { variant })
@@ -96,7 +100,7 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
 
   return (
     <CategoryContext.Provider
-      value={{ categories, createCategories, handleAlert }}
+      value={{ categories, createCategories, updatedCategories, handleAlert }}
     >
       {children}
     </CategoryContext.Provider>

@@ -15,10 +15,12 @@ import { CategoryContext } from '../../../contexts/CategoryContext'
 import { api } from '../../../services/api'
 import Drawing from '../../../components/Drawing'
 import StoreCategory from './store'
+import UpdatedCategory from './updated'
 
 interface Category {
   id: number
   name: string
+  slug: string
   status: number | string
   updated_at: string
   created_at: string
@@ -28,7 +30,8 @@ export default function ControlledSelectionGrid() {
   const { categories } = useContext(CategoryContext)
   const [selected, setSelected] = useState<GridSelectionModel>([])
   const [selectionModel, setSelectionModel] = useState([])
-  const [openDrawing, setOpenDrawing] = useState(false)
+  const [openDrawingCreated, setOpenDrawingCreated] = useState(false)
+  const [openDrawingUpdated, setopenDrawingUpdated] = useState(false)
   const [drawingTitle, setDrawingTitle] = useState('')
   const [drawingContent, setDrawingContent] = useState<Category>({} as Category)
 
@@ -43,8 +46,7 @@ export default function ControlledSelectionGrid() {
     if (id) {
       setDrawingContent(category as Category)
       setDrawingTitle('Editar Categoria')
-      setOpenDrawing(true)
-      console.log(drawingContent)
+      setopenDrawingUpdated(true)
     }
   }
 
@@ -72,11 +74,7 @@ export default function ControlledSelectionGrid() {
             color="success"
             startIcon={<SaveIcon />}
             onClick={() => {
-              if (selected.length > 1) {
-                alert('Selecione apenas uma categoria para editar')
-              } else {
-                handleEditCategory(selected[0])
-              }
+              setOpenDrawingCreated(true)
             }}
           >
             Cadastrar
@@ -182,13 +180,22 @@ export default function ControlledSelectionGrid() {
           }}
         />
       </div>
-      {openDrawing && (
+      {openDrawingCreated && (
+        <Drawing
+          anchor="right"
+          title="Cadastro de categoria"
+          onClose={() => setOpenDrawingCreated(false)}
+        >
+          <StoreCategory />
+        </Drawing>
+      )}
+      {openDrawingUpdated && (
         <Drawing
           anchor="right"
           title={drawingTitle}
-          onClose={() => setOpenDrawing(false)}
+          onClose={() => setopenDrawingUpdated(false)}
         >
-          <StoreCategory />
+          <UpdatedCategory category={drawingContent} />
         </Drawing>
       )}
     </Layout>

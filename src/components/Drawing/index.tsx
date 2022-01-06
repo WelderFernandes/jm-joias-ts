@@ -26,10 +26,10 @@ export default function TemporaryDrawer({
     bottom: false,
     right: false
   })
-  const [open, setOpen] = useState(true)
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => () => {
     setState({ ...state, [anchor]: open })
+    console.log(onClose && onClose())
     onClose && onClose()
   }
 
@@ -49,7 +49,7 @@ export default function TemporaryDrawer({
           <AddIcon />
         </Fab> */}
         <Drawer
-          open={open}
+          open={true}
           anchor={anchor}
           variant="temporary"
           disableEscapeKeyDown={true}
