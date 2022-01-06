@@ -13,7 +13,7 @@ import { CategoryContext } from '../../../contexts/CategoryContext'
 
 type Category = {
   id?: number
-  name?: string
+  name: string
   slug: string
   status: string
 }
@@ -48,7 +48,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     setValues({ ...values, [name]: value })
   }
 
-  async function handleStore(data: Category) {
+  function handleStore(data: Category) {
     setLoading(true)
 
     if (data.name === '' || data.slug === '' || data.status === null) {
@@ -56,12 +56,12 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
       return
     }
 
-    await updatedCategories({
-      id: data.id,
-      name: data.name,
-      slug: data.slug,
-      status: data.status
-    })
+    // await updatedCategories({
+    //   id: data.id,
+    //   name: data.name,
+    //   slug: data.slug,
+    //   status: data.status
+    // })
     handleAlert({
       message: 'Categoria atualizado com sucesso!',
       variant: 'success'
