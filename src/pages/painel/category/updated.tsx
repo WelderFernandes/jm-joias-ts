@@ -1,4 +1,4 @@
-import { Box, FormHelperText, Grid, useFormControl } from '@mui/material'
+import { Box, FormHelperText, Grid } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -35,13 +35,13 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     formState: { errors }
   } = useForm()
 
-  const initialValues = {
-    name: category.name,
-    slug: category.slug,
-    status: category.status == 'Ativo' ? '1' : '0'
-  }
+  // const initialValues = {
+  //   name: category.name,
+  //   slug: category.slug,
+  //   status: category.status == 'Ativo' ? '1' : '0'
+  // }
 
-  const [values, setValues] = useState(initialValues)
+  const [values, setValues] = useState({})
 
   const handleChange = (event: SelectChangeEvent) => {
     const { name, value } = event.target
