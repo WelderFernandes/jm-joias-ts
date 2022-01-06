@@ -12,6 +12,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { AuthProvider } from '../contexts/AuthContext'
 import { CategoryProvider } from '../contexts/CategoryContext'
+// import { DrawerProvider } from '../contexts/DrawingContext'
 import { SnackbarProvider } from 'notistack'
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -108,7 +109,9 @@ export default function MyApp(props: MyAppProps) {
           <CssBaseline />
           <SnackbarProvider maxSnack={3}>
             <CategoryProvider>
+              {/* <DrawerProvider> */}
               <Component {...pageProps} />
+              {/* </DrawerProvider> */}
             </CategoryProvider>
           </SnackbarProvider>
         </ThemeProvider>

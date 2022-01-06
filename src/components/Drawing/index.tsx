@@ -11,12 +11,14 @@ type DrawingProps = {
   children: ReactNode
   anchor: Anchor
   title?: string
+  onClose?: () => void
 }
 
 export default function TemporaryDrawer({
   children,
   anchor,
-  title
+  title,
+  onClose
 }: DrawingProps) {
   const [state, setState] = useState({
     top: false,
@@ -24,15 +26,17 @@ export default function TemporaryDrawer({
     bottom: false,
     right: false
   })
+  const [open, setOpen] = useState(true)
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => () => {
     setState({ ...state, [anchor]: open })
+    onClose && onClose()
   }
 
   return (
     <Container>
       <Box>
-        <Fab
+        {/* <Fab
           color="secondary"
           aria-label="add"
           onClick={toggleDrawer(anchor, true)}
@@ -43,10 +47,10 @@ export default function TemporaryDrawer({
           }}
         >
           <AddIcon />
-        </Fab>
+        </Fab> */}
         <Drawer
+          open={open}
           anchor={anchor}
-          open={state[anchor]}
           variant="temporary"
           disableEscapeKeyDown={true}
           ModalProps={{
