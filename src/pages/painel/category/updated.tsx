@@ -13,9 +13,9 @@ import { CategoryContext } from '../../../contexts/CategoryContext'
 
 type Category = {
   id?: number
-  name: string
-  slug: string
-  status: string
+  name?: string
+  slug?: string
+  status?: string
 }
 
 type CategoryUpdatedProps = {
