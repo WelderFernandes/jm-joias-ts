@@ -10,8 +10,7 @@ import { LoadingButton } from '@mui/lab'
 import { useForm } from 'react-hook-form'
 
 import { CategoryContext } from '../../../contexts/CategoryContext'
-
-type Category = {
+interface Category {
   id?: number
   name?: string
   slug?: string
@@ -58,9 +57,9 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
 
     await updatedCategories({
       id: data.id,
-      name: data.name,
-      slug: data.slug,
-      status: data.status
+      name: data?.name as string,
+      slug: data?.slug as string,
+      status: data?.status
     })
     handleAlert({
       message: 'Categoria atualizado com sucesso!',
