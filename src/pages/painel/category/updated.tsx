@@ -34,7 +34,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
 
   const initialValues = {
     name: category?.name,
-    slug: category.slug,
+    slug: category?.slug,
     status: category.status == 'Ativo' ? '1' : '0'
   }
 
