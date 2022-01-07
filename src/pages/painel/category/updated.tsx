@@ -33,7 +33,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
   } = useForm()
 
   const initialValues = {
-    name: category.name,
+    name: category?.name,
     slug: category.slug,
     status: category.status == 'Ativo' ? '1' : '0'
   }
