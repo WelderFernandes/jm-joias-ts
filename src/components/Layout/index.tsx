@@ -74,7 +74,7 @@ export function Layout({ children, title }: LayoutProps) {
           justifyContent: 'center'
         }}
       >
-        <Image src="/logo.png" alt="Logo" width={120} height={120} />
+        <Image src="/logo.png" alt="Logo" width={400} height={125} />
       </Box>
       <ThemeProvider theme={theme}>
         <Divider

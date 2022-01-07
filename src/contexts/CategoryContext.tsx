@@ -36,6 +36,7 @@ export const CategoryContext = createContext<CategoryContextProps>(
 export function CategoryProvider({ children }: CategoryProviderProps) {
   const [categories, setCategories] = useState<Category[]>([])
   const { enqueueSnackbar } = useSnackbar()
+  const [update, setUpdate] = useState(false)
 
   useEffect(() => {
     api.get('/api/category').then(response => {
@@ -58,7 +59,7 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
       })
       setCategories(newCategory)
     })
-  }, [])
+  }, [update])
 
   async function createCategories(categoryInput: CategoryInput) {
     const response = await api.post('/api/category/store', categoryInput)
@@ -82,16 +83,15 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   }
 
   async function updatedCategories(categoryInput: CategoryInput) {
-    console.log(categoryInput)
     const response = await api.put(`/api/category/${categoryInput.id}`, {
       name: categoryInput.name,
       slug: categoryInput.slug,
       status: categoryInput.status === 'Ativo' ? 1 : 0
     })
 
-    const { data: category } = response.data
-
-    setCategories([...categories, category])
+    const { data } = response.data
+    setCategories([...categories, data])
+    setUpdate(!update)
   }
 
   function handleAlert({ message, variant }: CustomAlertProps) {
