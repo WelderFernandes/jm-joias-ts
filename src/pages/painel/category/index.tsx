@@ -41,17 +41,6 @@ export default function ControlledSelectionGrid() {
 
   useEffect(() => {
     setRows(categories)
-    // let newCategory: Category[] = []
-    // categories.map((category: Category) => {
-    //   newCategory.push({
-    //     id: category?.id,
-    //     name: category?.name,
-    //     slug: category?.slug,
-    //     status: category?.status,
-    //     updated_at: category?.updated_at,
-    //     created_at: category?.created_at
-    //   })
-    // })
   }, [categories])
 
   function handleEditCategory(id: number) {
