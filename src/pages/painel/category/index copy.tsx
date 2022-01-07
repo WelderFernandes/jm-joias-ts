@@ -3,13 +3,11 @@ import {
   DataGrid,
   GridRowsProp,
   GridColDef,
-  GridSelectionModel,
-  GridActionsCellItem
+  GridSelectionModel
 } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import SaveIcon from '@mui/icons-material/Save'
-import CancelIcon from '@mui/icons-material/Cancel'
 
 import { Layout } from '../../../components/Layout'
 import { Button, Stack, Typography } from '@mui/material'
@@ -40,21 +38,21 @@ export default function ControlledSelectionGrid() {
   const [rows, setRows] = useState(categories)
 
   useEffect(() => {
-    setRows(categories)
-    // let newCategory: Category[] = []
-    // categories.map((category: Category) => {
-    //   newCategory.push({
-    //     id: category?.id,
-    //     name: category?.name,
-    //     slug: category?.slug,
-    //     status: category?.status,
-    //     updated_at: category?.updated_at,
-    //     created_at: category?.created_at
-    //   })
-    // })
+    // setRows(categories)
+    let newCategory: Category[] = []
+    categories.map((category: Category) => {
+      newCategory.push({
+        id: category?.id,
+        name: category?.name,
+        slug: category?.slug,
+        status: category?.status,
+        updated_at: category?.updated_at,
+        created_at: category?.created_at
+      })
+    })
   }, [categories])
 
-  function handleEditCategory(id: number) {
+  function handleEditCategory(id: any) {
     const category = categories.find(category => category.id === id)
     if (id) {
       setDrawingContent(category as Category)
@@ -63,47 +61,13 @@ export default function ControlledSelectionGrid() {
     }
   }
 
-  async function handleSingleDeleteCategory(id: number) {
-    await api.post(`api/category/massdelete/${id}`)
-    await api.get('api/category').then(response => {
-      setRows(response.data)
-    })
-    // setRows(r => r.filter(x => !selectedIDs.has(x.id)))
-  }
-
-  const columns = [
+  const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 50 },
     { field: 'name', headerName: 'Nome', width: 250 },
     { field: 'status', headerName: 'Status', width: 250 },
     { field: 'created_at', headerName: 'Data de Criaçao', width: 200 },
     { field: 'updated_at', headerName: 'Data de Atualização', width: 200 },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Ações',
-      width: 100,
-      cellClassName: 'actions',
-      getActions: (id: number) => {
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => handleEditCategory(id)}
-            color="primary"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            className="textPrimary"
-            onClick={() => {
-              handleSingleDeleteCategory(id)
-            }}
-            sx={{ color: 'red' }}
-          />
-        ]
-      }
-    }
+    { field: 'action', headerName: 'Ações', width: 100 }
   ]
 
   return (
@@ -114,31 +78,9 @@ export default function ControlledSelectionGrid() {
           spacing={2}
           mb={3}
           sx={{
-            justifyContent: 'space-between'
+            justifyContent: 'flex-end'
           }}
         >
-          {selected.length > 0 && (
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ color: 'red', borderColor: 'red' }}
-              startIcon={<DeleteIcon />}
-              onClick={async () => {
-                const selectedIDs = new Set<any>(selectionModel)
-
-                const ids: number[] = []
-
-                selectedIDs.forEach(id => {
-                  ids.push(id)
-                })
-
-                await api.post(`api/category/massdelete/${ids}`)
-                setRows(r => r.filter(x => !selectedIDs.has(x.id)))
-              }}
-            >
-              DELETAR
-            </Button>
-          )}
           <Button
             variant="contained"
             size="small"
@@ -149,6 +91,41 @@ export default function ControlledSelectionGrid() {
             }}
           >
             Cadastrar
+          </Button>
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => {
+              if (selected.length > 1) {
+                alert('Selecione apenas uma categoria para editar')
+              } else {
+                handleEditCategory(selected[0])
+              }
+            }}
+          >
+            Editar
+          </Button>
+
+          <Button
+            size="small"
+            variant="outlined"
+            sx={{ color: 'red', borderColor: 'red' }}
+            startIcon={<DeleteIcon />}
+            onClick={async () => {
+              const selectedIDs = new Set<any>(selectionModel)
+
+              const ids: number[] = []
+
+              selectedIDs.forEach(id => {
+                ids.push(id)
+              })
+
+              await api.post(`api/category/massdelete/${ids}`)
+              setRows(r => r.filter(x => !selectedIDs.has(x.id)))
+            }}
+          >
+            DELETAR
           </Button>
         </Stack>
         <DataGrid
@@ -166,6 +143,11 @@ export default function ControlledSelectionGrid() {
             height: '100%',
             width: '100%'
           }}
+          components={{
+            Toolbar: EditToolbar
+          }}
+          nable
+          editing
           localeText={{
             // Root
             noRowsLabel: 'Nenhum registro encontrado',
