@@ -35,7 +35,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
   const initialValues = {
     name: category?.name,
     slug: category?.slug,
-    status: category.status == 'Ativo' ? '1' : '0'
+    status: category?.status == 'Ativo' ? '1' : '0'
   }
 
   const [values, setValues] = useState<Category>(initialValues)
