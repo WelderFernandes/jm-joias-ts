@@ -40,6 +40,7 @@ export default function ControlledSelectionGrid() {
   const [rows, setRows] = useState(categories)
 
   useEffect(() => {
+    //bug
     setRows(categories)
   }, [categories])
 
@@ -57,7 +58,6 @@ export default function ControlledSelectionGrid() {
     await api.get('api/category').then(response => {
       setRows(response.data)
     })
-    // setRows(r => r.filter(x => !selectedIDs.has(x.id)))
   }
 
   const columns = [
