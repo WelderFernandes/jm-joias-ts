@@ -91,7 +91,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
             {...register('id', { required: 'Nome é Obrigatório.' })}
             type="hidden"
             name="id"
-            value={category.id}
+            value={category?.id}
           />
 
           <Grid item>
