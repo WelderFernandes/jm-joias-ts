@@ -102,7 +102,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
               name="name"
               focused
               label="Nome"
-              defaultValue={category.name}
+              defaultValue={category?.name}
               variant="outlined"
               type={'text'}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +117,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
               id="outlined-basic"
               label="Slug"
               focused
-              defaultValue={category.slug}
+              defaultValue={category?.slug}
               variant="outlined"
               name="slug"
               type={'text'}
@@ -136,7 +136,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
                 id="status"
                 onChange={handleChange}
                 name="status"
-                value={values.status}
+                value={values?.status}
                 label="Status"
                 sx={{
                   width: '14rem'
