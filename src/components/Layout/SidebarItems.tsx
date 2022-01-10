@@ -3,6 +3,7 @@ import ProductionQuantityLimitsRoundedIcon from '@mui/icons-material/ProductionQ
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'
 import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRounded'
 import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded'
+import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate'
 
 export const SidebarItems = [
   {
@@ -29,5 +30,22 @@ export const SidebarItems = [
     name: 'Fornecedor',
     icon: <AddShoppingCartRoundedIcon />,
     url: '/painel/provider'
+  },
+  {
+    name: 'Pré-cadastro',
+    icon: <ControlPointDuplicateIcon />,
+    url: '#',
+    submenu: [
+      {
+        name: 'Produtos',
+        url: '/painel/pre-register/product',
+        icon: <ProductionQuantityLimitsRoundedIcon />
+      },
+      {
+        name: 'Categoria',
+        url: '/painel/pre-register/category',
+        icon: <CategoryRoundedIcon />
+      }
+    ]
   }
 ]

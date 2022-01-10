@@ -22,6 +22,13 @@ import Image from 'next/image'
 import { ReactNode, ReactPropTypes } from 'react'
 import { useRouter } from 'next/router'
 import { AuthContext } from '../../contexts/AuthContext'
+import { Button } from '@mui/material'
+import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
+import ListSubheader from '@mui/material/ListSubheader'
+import Collapse from '@mui/material/Collapse'
+import ListItemButton from '@mui/material/ListItemButton'
+import ExpandLess from '@mui/icons-material/ExpandLess'
+import ExpandMore from '@mui/icons-material/ExpandMore'
 
 const drawerWidth = 240
 
@@ -40,6 +47,7 @@ type SidebarProps = {
 
 export function Layout({ children, title }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const router = useRouter()
 
   const { user } = useContext(AuthContext)
@@ -61,6 +69,9 @@ export function Layout({ children, title }: LayoutProps) {
 
   const isSelected = (url: string) => {
     return router.pathname === url
+  }
+  const handleClick = () => {
+    setOpen(!open)
   }
 
   const drawer = (
@@ -85,41 +96,183 @@ export function Layout({ children, title }: LayoutProps) {
             opacity: 0.1
           }}
         />
-        <List>
-          {SidebarItems.map((item, index) => (
-            <Link href={item.url} key={index}>
-              <ListItem
-                button={true}
-                sx={[
-                  {
-                    color: '#fff',
-                    opacity: isSelected(item.url) ? 1 : 0.5,
-                    borderRight: isSelected(item.url) ? '3px solid #fff' : ''
-                  },
-                  {
-                    '&:hover': {
-                      color: '#fff',
-                      opacity: 0.5
-                    }
-                  }
-                ]}
-                onClick={() => {
-                  setMobileOpen(false)
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'center',
+            justifyItems: 'space-between',
+            alignContent: 'space-between',
+            alignSelf: 'space-between'
+          }}
+        >
+          <List
+            subheader={
+              <ListSubheader
+                sx={{
+                  background: '#161624',
+                  color: '#ccc',
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold',
+                  opacity: 0.5
                 }}
+                component="div"
+                id="nested-list-subheader"
               >
-                <ListItemIcon
-                  sx={{
-                    color: 'white'
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-        <Divider />
+                Geral
+              </ListSubheader>
+            }
+          >
+            {SidebarItems.map((item, index) => (
+              <Link href={item.url} key={index}>
+                {item.submenu ? (
+                  <>
+                    <ListItem
+                      button
+                      onClick={handleClick}
+                      sx={[
+                        {
+                          color: '#FFF',
+                          background: open ? '#161628' : '#161624',
+                          boxShadow: open ? 4 : 'none',
+                          opacity: open ? 1 : 0.4,
+                          borderRight: open ? '3px solid #fff' : ''
+                        },
+                        {
+                          '&:hover': {
+                            color: '#fff',
+                            opacity: 0.5
+                          }
+                        }
+                      ]}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          color: '#FFF'
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        sx={{
+                          color: '#FFF'
+                        }}
+                        primary={item.name}
+                      />
+                      {open ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                        {item.submenu.map((subitem, index) => (
+                          <Link href={subitem.url} key={index}>
+                            <ListItem
+                              button
+                              selected={isSelected(subitem.url)}
+                              sx={{
+                                marginLeft: '1rem',
+                                color: '#FFF',
+                                boxShadow: isSelected(subitem.url) ? 4 : 'none',
+                                opacity: isSelected(subitem.url) ? 1 : 0.4,
+                                borderRight: isSelected(subitem.url)
+                                  ? '3px solid #fff'
+                                  : ''
+                              }}
+                            >
+                              <ListItemIcon
+                                sx={{
+                                  color: '#FFF'
+                                }}
+                              >
+                                {subitem.icon}
+                              </ListItemIcon>
+                              <ListItemText
+                                sx={{
+                                  color: '#FFF'
+                                }}
+                                primary={subitem.name}
+                              />
+                            </ListItem>
+                          </Link>
+                        ))}
+                      </List>
+                    </Collapse>
+                  </>
+                ) : (
+                  <ListItemButton
+                    sx={[
+                      {
+                        color: '#FFF',
+                        background: isSelected(item.url)
+                          ? '#161628'
+                          : '#161624',
+                        boxShadow: isSelected(item.url) ? 4 : 'none',
+                        opacity: isSelected(item.url) ? 1 : 0.4,
+                        borderRight: isSelected(item.url)
+                          ? '3px solid #fff'
+                          : ''
+                      },
+                      {
+                        '&:hover': {
+                          color: '#fff',
+                          opacity: 0.5
+                        }
+                      }
+                    ]}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        color: '#FFF'
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.name}
+                      sx={{
+                        color: '#FFF'
+                      }}
+                    />
+                  </ListItemButton>
+                )}
+              </Link>
+            ))}
+          </List>
+          <Box
+            mr={2}
+            ml={2}
+            sx={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fill: '#FFF',
+              marginBottom: '0px'
+            }}
+          >
+            <Button
+              variant="outlined"
+              sx={{
+                color: '#FFF',
+                background: '#161624',
+                border: '1px solid #ccc',
+                fontSize: '0.8rem',
+                fontWeight: 'bold',
+                width: '100%',
+                height: '3rem',
+                marginTop: '1rem',
+                '&:hover': {
+                  color: '#fff',
+                  background: '#161628',
+                  border: '1px solid #fff'
+                }
+              }}
+              startIcon={<PowerSettingsNewOutlinedIcon />}
+            >
+              Logaut
+            </Button>
+          </Box>
+          <Divider />
+        </Box>
       </ThemeProvider>
     </div>
   )
