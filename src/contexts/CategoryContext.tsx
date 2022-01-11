@@ -40,7 +40,8 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   const [update, setUpdate] = useState(false)
 
   useEffect(() => {
-    const { ['memeli.token']: token } = parseCookies(null)
+    const { 'memeli.token': token } = parseCookies()
+
     if (token) {
       api.get('/api/category').then(response => {
         const newCategory: Array<Category> = []
