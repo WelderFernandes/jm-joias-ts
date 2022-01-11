@@ -32,6 +32,7 @@ import { ptBR } from '@mui/material/locale'
 import InputBase from '@mui/material/InputBase'
 import SearchIcon from '@mui/icons-material/Search'
 import { localeDatagrid } from '../../../utils/localeDatagrid'
+import { GetServerSideProps } from 'next'
 interface Category {
   id: number
   name: string
@@ -341,4 +342,20 @@ export default function ControlledSelectionGrid() {
       )}
     </Layout>
   )
+}
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  // const apiClient = getApiClient(ctx)
+  const { ['memeli.token']: token } = parseCookies(ctx)
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+  // await apiClient.get('/auth/me', token)
+  return {
+    props: {}
+  }
 }
