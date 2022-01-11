@@ -42,7 +42,9 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   useEffect(() => {
     const { 'memeli.token': token } = parseCookies()
 
-    if (token) {
+    if (!!token) {
+      console.log('token', token)
+
       api.get('/api/category').then(response => {
         const newCategory: Array<Category> = []
         const data: Array<any> = response.data.data
@@ -63,7 +65,7 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
         setCategories(newCategory)
       })
     }
-  }, [update])
+  }, [])
 
   async function createCategories(categoryInput: CategoryInput) {
     const response = await api.post('/api/category/store', {
