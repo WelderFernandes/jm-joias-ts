@@ -14,6 +14,8 @@ import { AuthProvider } from '../contexts/AuthContext'
 import { CategoryProvider } from '../contexts/CategoryContext'
 // import { DrawerProvider } from '../contexts/DrawingContext'
 import { SnackbarProvider } from 'notistack'
+import { GetServerSideProps } from 'next'
+import { parseCookies } from 'nookies'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -118,4 +120,22 @@ export default function MyApp(props: MyAppProps) {
       </CacheProvider>
     </AuthProvider>
   )
+}
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  // const apiClient = getApiClient(ctx)
+
+  const route = ctx.req.url
+  console.log('Rota')
+  const { ['memeli.token']: token } = parseCookies(ctx)
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: {}
+  }
 }

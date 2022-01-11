@@ -95,11 +95,14 @@ export function Layout({ children, title }: LayoutProps) {
   }
 
   async function handleLogout() {
-    setLoading(true)
-    await api.post('/api/logout').then(() => {
-      return destroyCookie(null, 'memeli.token')
-    })
-    router.push('/login')
+    const token = parseCookies().token
+    if (token) {
+      setLoading(true)
+      await api.post('/api/logout').then(() => {
+        return destroyCookie(null, 'memeli.token')
+      })
+      router.push('/login')
+    }
   }
   const StyledMenu = styled((props: MenuProps) => (
     <Menu

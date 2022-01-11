@@ -46,13 +46,21 @@ export function AuthProvider({ children }: AuthProps) {
 
   useEffect(() => {
     const { 'memeli.token': token } = parseCookies()
-
-    if (token && router.route !== '/') {
-      api.post('/api/user', { token }).then(response => {
-        setUser(response.data.data)
-        router.push('/painel')
-      })
+    if (token != undefined) {
+      api
+        .post('/api/user', { token })
+        .then(response => {
+          setUser(response.data.data)
+        })
+        .catch(error => {
+          console.log('error', error)
+          setCookie({}, 'memeli.token', '', {
+            maxAge: -1,
+            path: '/'
+          })
+        })
     }
+    router.push('/painel')
   }, [])
 
   async function signIn({ email, password }: SignInData) {
