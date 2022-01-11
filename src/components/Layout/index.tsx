@@ -95,7 +95,8 @@ export function Layout({ children, title }: LayoutProps) {
   }
 
   async function handleLogout() {
-    const token = parseCookies().token
+    const { 'memeli.token': token } = parseCookies()
+
     if (token) {
       setLoading(true)
       await api.post('/api/logout').then(() => {
