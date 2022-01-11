@@ -101,7 +101,7 @@ export function Layout({ children, title }: LayoutProps) {
       await api.post('/api/logout').then(() => {
         return destroyCookie(null, 'memeli.token')
       })
-      router.push('/painel')
+      router.push('/login')
     }
   }
   const StyledMenu = styled((props: MenuProps) => (

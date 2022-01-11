@@ -115,7 +115,6 @@ export default function ControlledSelectionGrid() {
   }
 
   async function handleSingleDeleteCategory(params: GridRowParams) {
-    console.log(params.row.id)
     await api
       .post(`api/category/massdelete/${params.row.id}`)
       .then(() => {
@@ -314,7 +313,17 @@ export default function ControlledSelectionGrid() {
                 setSelectionModel(ids as any)
               }}
               sx={{
-                width: '100%'
+                height: '100vh'
+              }}
+              localeText={{
+                toolbarFilters: 'Filtros',
+                toolbarFiltersLabel: 'Mostrar filtros',
+                toolbarFiltersTooltipHide: 'Ocultar filtros',
+                toolbarFiltersTooltipShow: 'Mostrar filtros',
+                toolbarFiltersTooltipActive: count =>
+                  count !== 1
+                    ? `${count} filtros ativos`
+                    : `${count} filtro ativo`
               }}
             />
           </ThemeProvider>

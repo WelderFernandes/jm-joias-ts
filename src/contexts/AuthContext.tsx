@@ -47,7 +47,7 @@ export function AuthProvider({ children }: AuthProps) {
   useEffect(() => {
     const { 'memeli.token': token } = parseCookies()
 
-    if (token) {
+    if (token && router.route !== '/') {
       api.post('/api/user', { token }).then(response => {
         setUser(response.data.data)
         router.push('/painel')

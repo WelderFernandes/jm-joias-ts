@@ -43,8 +43,6 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     const { ['memeli.token']: token } = parseCookies(null)
 
     if (!!token) {
-      console.log(token)
-
       api.get('/api/category').then(response => {
         // setCategories(response.data.data)
         const newCategory: Array<Category> = []
@@ -97,7 +95,7 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     const response = await api.put(`/api/category/${categoryInput.id}`, {
       name: categoryInput.name,
       slug: categoryInput.slug,
-      status: categoryInput.status === 'Ativo' ? '1' : '0'
+      status: categoryInput.status === 1 ? '1' : '0'
     })
 
     const { data } = response.data

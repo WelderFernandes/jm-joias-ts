@@ -29,7 +29,6 @@ export default function TemporaryDrawer({
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => () => {
     setState({ ...state, [anchor]: open })
-    console.log(onClose && onClose())
     onClose && onClose()
   }
 
