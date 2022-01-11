@@ -293,7 +293,7 @@ export function Layout({ children, title }: LayoutProps) {
                               button
                               selected={isSelected(subitem.url)}
                               sx={{
-                                marginLeft: '1rem',
+                                paddingLeft: '1rem',
                                 color: '#FFF',
                                 boxShadow: isSelected(subitem.url) ? 4 : 'none',
                                 opacity: isSelected(subitem.url) ? 1 : 0.4,

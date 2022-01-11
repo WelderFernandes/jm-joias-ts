@@ -31,6 +31,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { ptBR } from '@mui/material/locale'
 import InputBase from '@mui/material/InputBase'
 import SearchIcon from '@mui/icons-material/Search'
+import { localeDatagrid } from '../../../utils/localeDatagrid'
 interface Category {
   id: number
   name: string
@@ -315,16 +316,7 @@ export default function ControlledSelectionGrid() {
               sx={{
                 height: '100vh'
               }}
-              localeText={{
-                toolbarFilters: 'Filtros',
-                toolbarFiltersLabel: 'Mostrar filtros',
-                toolbarFiltersTooltipHide: 'Ocultar filtros',
-                toolbarFiltersTooltipShow: 'Mostrar filtros',
-                toolbarFiltersTooltipActive: count =>
-                  count !== 1
-                    ? `${count} filtros ativos`
-                    : `${count} filtro ativo`
-              }}
+              localeText={localeDatagrid}
             />
           </ThemeProvider>
         </Box>
