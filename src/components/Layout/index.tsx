@@ -158,19 +158,7 @@ export function Layout({ children, title }: LayoutProps) {
         }}
       />
       <ThemeProvider theme={theme}>
-        <Box
-          m={2}
-          sx={{
-            display: 'flex',
-            fle: '1',
-            justifyContent: 'center',
-            justifyItems: 'center',
-            alignItems: 'center',
-            alignContent: 'center',
-            borderRadius: '8px',
-            height: '3rem'
-          }}
-        >
+        <Box m={2}>
           <Button
             id="settings"
             aria-controls={open ? 'demo-customized-menu' : undefined}
