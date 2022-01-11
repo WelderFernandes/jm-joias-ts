@@ -65,7 +65,7 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
         setCategories(newCategory)
       })
     }
-  }, [])
+  }, [update])
 
   async function createCategories(categoryInput: CategoryInput) {
     const response = await api.post('/api/category/store', {
