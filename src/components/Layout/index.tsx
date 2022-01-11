@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, MouseEvent } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -29,6 +29,15 @@ import Collapse from '@mui/material/Collapse'
 import ListItemButton from '@mui/material/ListItemButton'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import { destroyCookie, parseCookies } from 'nookies'
+import { api } from '../../services/api'
+
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import Menu, { MenuProps } from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import SettingsIcon from '@mui/icons-material/Settings'
+import { styled, alpha } from '@mui/material/styles'
+import { LoadingButton } from '@mui/lab'
 
 const drawerWidth = 240
 
@@ -49,6 +58,16 @@ export function Layout({ children, title }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const openMenu = Boolean(anchorEl)
+  const [loading, setLoading] = useState(false)
+
+  const handleClickMenu = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   const { user } = useContext(AuthContext)
 
@@ -70,24 +89,139 @@ export function Layout({ children, title }: LayoutProps) {
   const isSelected = (url: string) => {
     return router.pathname === url
   }
+
   const handleClick = () => {
     setOpen(!open)
   }
 
+  async function handleLogout() {
+    const token = parseCookies().token
+    if (!token) {
+      setLoading(true)
+      await api.post('/api/logout').then(() => {
+        return destroyCookie(null, 'memeli.token')
+      })
+      router.push('/painel')
+    }
+  }
+  const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+      elevation={0}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      {...props}
+    />
+  ))(({ theme }) => ({
+    '& .MuiPaper-root': {
+      borderRadius: 6,
+      marginTop: theme.spacing(1),
+      minWidth: 180,
+      color:
+        theme.palette.mode === 'light'
+          ? 'rgb(55, 65, 81)'
+          : theme.palette.grey[300],
+      boxShadow:
+        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+      '& .MuiMenu-list': {
+        padding: '4px 0'
+      },
+      '& .MuiMenuItem-root': {
+        '& .MuiSvgIcon-root': {
+          fontSize: 18,
+          color: theme.palette.text.secondary,
+          marginRight: theme.spacing(1.5)
+        },
+        '&:active': {
+          backgroundColor: alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity
+          )
+        }
+      }
+    }
+  }))
   const drawer = (
     <div>
-      <Box
-        m={2}
+      <Image src="/logo.png" alt="Logo" width={400} height={125} />
+      <Divider
+        light={true}
+        variant="middle"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center'
+          background: '#FFF',
+          opacity: 0.1
         }}
-      >
-        <Image src="/logo.png" alt="Logo" width={400} height={125} />
-      </Box>
+      />
       <ThemeProvider theme={theme}>
+        <Box
+          m={2}
+          sx={{
+            display: 'flex',
+            fle: '1',
+            justifyContent: 'center',
+            justifyItems: 'center',
+            alignItems: 'center',
+            alignContent: 'center',
+            borderRadius: '8px',
+            height: '3rem'
+          }}
+        >
+          <Button
+            id="settings"
+            aria-controls={open ? 'demo-customized-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            variant="contained"
+            // disableElevation
+            onClick={handleClickMenu}
+            endIcon={<SettingsIcon />}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+              width: '100%'
+            }}
+          >
+            <Typography noWrap component="div">
+              {user?.name}
+            </Typography>
+          </Button>
+          <StyledMenu
+            id="demo-customized-menu"
+            MenuListProps={{
+              'aria-labelledby': 'demo-customized-button'
+            }}
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={handleClose}
+          >
+            <MenuItem
+              disableRipple
+              sx={{
+                border: 'none',
+                padding: '0',
+                '&:hover': {
+                  opacity: 0.8
+                }
+              }}
+            >
+              {' '}
+              <LoadingButton
+                onClick={() => {
+                  handleLogout()
+                }}
+                loading={loading}
+                loadingPosition="center"
+              >
+                <PowerSettingsNewOutlinedIcon />
+                Sair
+              </LoadingButton>
+            </MenuItem>
+          </StyledMenu>
+        </Box>
         <Divider
           light={true}
           variant="middle"
@@ -96,6 +230,7 @@ export function Layout({ children, title }: LayoutProps) {
             opacity: 0.1
           }}
         />
+
         <Box
           sx={{
             display: 'flex',
@@ -249,8 +384,11 @@ export function Layout({ children, title }: LayoutProps) {
               marginBottom: '0px'
             }}
           >
-            <Button
+            {/* <Button
               variant="outlined"
+              onClick={() => {
+                handleLogout()
+              }}
               sx={{
                 color: '#FFF',
                 background: '#161624',
@@ -268,8 +406,8 @@ export function Layout({ children, title }: LayoutProps) {
               }}
               startIcon={<PowerSettingsNewOutlinedIcon />}
             >
-              Logaut
-            </Button>
+              SAIR
+            </Button> */}
           </Box>
           <Divider />
         </Box>
@@ -310,9 +448,7 @@ export function Layout({ children, title }: LayoutProps) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              Olá, {user?.name}
-            </Typography>
+
             <Typography
               variant="body1"
               noWrap
@@ -332,7 +468,6 @@ export function Layout({ children, title }: LayoutProps) {
         >
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Drawer
-            // container={container}
             variant="temporary"
             open={mobileOpen}
             onClose={handleDrawerToggle}
@@ -377,6 +512,7 @@ export function Layout({ children, title }: LayoutProps) {
           }}
         >
           <Toolbar />
+
           {children}
         </Box>
       </Box>

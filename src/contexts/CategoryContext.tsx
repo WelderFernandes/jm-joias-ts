@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, ReactNode } from 'react'
 import { api } from '../services/api'
 import { VariantType, useSnackbar } from 'notistack'
+import { parseCookies } from 'nookies'
 
 interface CustomAlertProps {
   message: string
@@ -39,26 +40,32 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   const [update, setUpdate] = useState(false)
 
   useEffect(() => {
-    api.get('/api/category').then(response => {
-      // setCategories(response.data.data)
-      const newCategory: Array<Category> = []
-      const data: Array<any> = response.data.data
-      data.map(category => {
-        newCategory.push({
-          id: category.id,
-          name: category.name,
-          slug: category.slug,
-          status: category.status == 1 ? 'Ativo' : 'Inativo',
-          updated_at: new Intl.DateTimeFormat('pt-BR').format(
-            new Date(category.updated_at)
-          ),
-          created_at: new Intl.DateTimeFormat('pt-BR').format(
-            new Date(category.updated_at)
-          )
+    const { ['memeli.token']: token } = parseCookies(null)
+
+    if (!!token) {
+      console.log(token)
+
+      api.get('/api/category').then(response => {
+        // setCategories(response.data.data)
+        const newCategory: Array<Category> = []
+        const data: Array<any> = response.data.data
+        data.map(category => {
+          newCategory.push({
+            id: category.id,
+            name: category.name,
+            slug: category.slug,
+            status: category.status == 1 ? 'Ativo' : 'Inativo',
+            updated_at: new Intl.DateTimeFormat('pt-BR').format(
+              new Date(category.updated_at)
+            ),
+            created_at: new Intl.DateTimeFormat('pt-BR').format(
+              new Date(category.updated_at)
+            )
+          })
         })
+        setCategories(newCategory)
       })
-      setCategories(newCategory)
-    })
+    }
   }, [update])
 
   async function createCategories(categoryInput: CategoryInput) {

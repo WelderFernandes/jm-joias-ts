@@ -228,7 +228,7 @@ export default function ControlledSelectionGrid() {
             backgroundColor: '#fafafa',
             borderRadius: 4,
 
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('xl')]: {
               width: '70%'
             },
             // boxShadow: '0px 0px 1px rgba(0,0,0,0.1)'

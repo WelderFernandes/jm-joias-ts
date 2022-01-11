@@ -8,7 +8,6 @@ import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useForm } from 'react-hook-form'
@@ -18,6 +17,7 @@ import Alert from '@mui/material/Alert'
 import IconButton from '@mui/material/IconButton'
 import Collapse from '@mui/material/Collapse'
 import CloseIcon from '@mui/icons-material/Close'
+import Image from 'next/image'
 
 function Copyright(props: any) {
   return (
@@ -29,9 +29,8 @@ function Copyright(props: any) {
     >
       {'Copyright © '}
       <Link color="inherit" href="#">
-        RM SOLUÇÔES TECNOLOGICAS
-      </Link>{' '}
-      {new Date().getFullYear()}
+        RM SOLUÇÔES TECNOLOGICAS {new Date().getFullYear()}
+      </Link>
       {'.'}
     </Typography>
   )
@@ -68,7 +67,11 @@ export default function SignInSide() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid
+        container
+        component="main"
+        sx={{ height: '100vh', display: 'flex' }}
+      >
         <CssBaseline />
         <Grid
           item
@@ -76,7 +79,8 @@ export default function SignInSide() {
           sm={4}
           md={9}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            // backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: 'url(bg_login.png)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: t =>
               t.palette.mode === 'light'
@@ -86,21 +90,21 @@ export default function SignInSide() {
             backgroundPosition: 'center'
           }}
         />
-        <Grid item xs={12} sm={8} md={3} component={Paper} elevation={6} square>
+        <Grid item sm={8} md={3} component={Paper} elevation={6} square>
           <Box
+            alignContent="center"
             sx={{
-              my: 8,
-              mx: 4,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center'
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '90vh',
+              mx: 5
             }}
           >
-            <Avatar sx={{ m: 1, backgroundColor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
+            <Image src="/logo.png" alt="logo" width={320} height={100} />
             <Typography component="h1" variant="h5">
-              Login
+              Entrar
             </Typography>
             <Box
               component="form"
@@ -139,10 +143,11 @@ export default function SignInSide() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                type="email"
               />
               <TextField
                 {...register('password')}
@@ -176,9 +181,21 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 12, mb: 0 }} />
             </Box>
           </Box>
+          <Copyright
+            sx={{
+              display: 'flex',
+              fle: '1',
+              alignContent: 'center',
+              alignItems: 'flex-end',
+              alignSelf: 'flex-end',
+              justifyContent: 'center',
+              justifyItems: 'flex-end',
+              justifySelf: 'flex-end',
+              height: '10vh'
+            }}
+          />
         </Grid>
       </Grid>
     </ThemeProvider>
