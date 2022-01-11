@@ -33,6 +33,7 @@ import InputBase from '@mui/material/InputBase'
 import SearchIcon from '@mui/icons-material/Search'
 import { localeDatagrid } from '../../../utils/localeDatagrid'
 import { GetServerSideProps } from 'next'
+import { parseCookies } from 'nookies'
 interface Category {
   id: number
   name: string
