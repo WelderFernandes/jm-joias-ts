@@ -1,7 +1,6 @@
 import { Layout } from '../../components/Layout'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
-import { getApiClient } from '../../services/axios'
 export default function Index() {
   return (
     <>
@@ -12,8 +11,8 @@ export default function Index() {
   )
 }
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  // const apiClient = getApiClient(ctx)
   const { ['memeli.token']: token } = parseCookies(ctx)
+
   if (!token) {
     return {
       redirect: {
@@ -22,10 +21,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
       }
     }
   }
-  // await apiClient.get('/auth/me', token)
   return {
     props: {}
   }
 }
-
-///https://material-kit-pro-react.devias.io/dashboard

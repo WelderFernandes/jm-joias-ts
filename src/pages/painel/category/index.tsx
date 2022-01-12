@@ -105,7 +105,6 @@ export default function ControlledSelectionGrid() {
   const [rows, setRows] = useState(categories)
 
   useEffect(() => {
-    //bug
     setRows(categories)
   }, [categories])
 
@@ -345,7 +344,6 @@ export default function ControlledSelectionGrid() {
   )
 }
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  // const apiClient = getApiClient(ctx)
   const { ['memeli.token']: token } = parseCookies(ctx)
   if (!token) {
     return {
@@ -355,7 +353,6 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
       }
     }
   }
-  // await apiClient.get('/auth/me', token)
   return {
     props: {}
   }

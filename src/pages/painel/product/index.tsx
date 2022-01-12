@@ -431,7 +431,6 @@ export default function EnhancedTable() {
   )
 }
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  // const apiClient = getApiClient(ctx)
   const { ['memeli.token']: token } = parseCookies(ctx)
   if (!token) {
     return {

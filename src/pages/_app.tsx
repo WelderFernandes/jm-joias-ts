@@ -121,21 +121,3 @@ export default function MyApp(props: MyAppProps) {
     </AuthProvider>
   )
 }
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  // const apiClient = getApiClient(ctx)
-
-  const route = ctx.req.url
-  console.log('Rota')
-  const { ['memeli.token']: token } = parseCookies(ctx)
-  if (!token) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false
-      }
-    }
-  }
-  return {
-    props: {}
-  }
-}

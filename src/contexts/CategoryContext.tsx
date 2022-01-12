@@ -38,62 +38,70 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   const [categories, setCategories] = useState<Category[]>([])
   const { enqueueSnackbar } = useSnackbar()
   const [update, setUpdate] = useState(false)
+  const { 'memeli.token': token } = parseCookies()
+  console.log('categories', categories)
 
   useEffect(() => {
-    const { 'memeli.token': token } = parseCookies()
+    if (token) {
+      api
+        .get('/api/category')
+        .then(response => {
+          const newCategory: Array<Category> = []
+          const data: Array<any> = response.data.data
+          data.map(category => {
+            newCategory.push({
+              id: category.id,
+              name: category.name,
+              slug: category.slug,
+              status: category.status == 1 ? 'Ativo' : 'Inativo',
+              updated_at: new Intl.DateTimeFormat('pt-BR').format(
+                new Date(category.updated_at)
+              ),
+              created_at: new Intl.DateTimeFormat('pt-BR').format(
+                new Date(category.updated_at)
+              )
+            })
+            console.log('newCategory', newCategory)
+          })
 
-    if (!!token) {
-      console.log('token', token)
-
-      api.get('/api/category').then(response => {
-        const newCategory: Array<Category> = []
-        const data: Array<any> = response.data.data
-        data.map(category => {
-          newCategory.push({
-            id: category.id,
-            name: category.name,
-            slug: category.slug,
-            status: category.status == 1 ? 'Ativo' : 'Inativo',
-            updated_at: new Intl.DateTimeFormat('pt-BR').format(
-              new Date(category.updated_at)
-            ),
-            created_at: new Intl.DateTimeFormat('pt-BR').format(
-              new Date(category.updated_at)
-            )
+          setCategories(newCategory)
+          // console.log('token', token)
+          // console.log('update', update)
+          // console.log('categories', categories)
+        })
+        .catch(error => {
+          enqueueSnackbar('Erro ao carregar as categorias', {
+            variant: 'error'
           })
         })
-        setCategories(newCategory)
-      })
     }
-  }, [])
+  }, [token, update])
 
-  useEffect(() => {
-    const { 'memeli.token': token } = parseCookies()
+  // useEffect(() => {
+  //   const { 'memeli.token': token } = parseCookies()
 
-    if (!!token) {
-      console.log('token', token)
-
-      api.get('/api/category').then(response => {
-        const newCategory: Array<Category> = []
-        const data: Array<any> = response.data.data
-        data.map(category => {
-          newCategory.push({
-            id: category.id,
-            name: category.name,
-            slug: category.slug,
-            status: category.status == 1 ? 'Ativo' : 'Inativo',
-            updated_at: new Intl.DateTimeFormat('pt-BR').format(
-              new Date(category.updated_at)
-            ),
-            created_at: new Intl.DateTimeFormat('pt-BR').format(
-              new Date(category.updated_at)
-            )
-          })
-        })
-        setCategories(newCategory)
-      })
-    }
-  }, [update])
+  //   if (token) {
+  //     api.get('/api/category').then(response => {
+  //       const newCategory: Array<Category> = []
+  //       const data: Array<any> = response.data.data
+  //       data.map(category => {
+  //         newCategory.push({
+  //           id: category.id,
+  //           name: category.name,
+  //           slug: category.slug,
+  //           status: category.status == 1 ? 'Ativo' : 'Inativo',
+  //           updated_at: new Intl.DateTimeFormat('pt-BR').format(
+  //             new Date(category.updated_at)
+  //           ),
+  //           created_at: new Intl.DateTimeFormat('pt-BR').format(
+  //             new Date(category.updated_at)
+  //           )
+  //         })
+  //       })
+  //       setCategories(newCategory)
+  //     })
+  //   }
+  // }, [update])
 
   async function createCategories(categoryInput: CategoryInput) {
     const response = await api.post('/api/category/store', {
