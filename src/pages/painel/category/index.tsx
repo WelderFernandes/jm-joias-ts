@@ -23,7 +23,10 @@ import { api } from '../../../services/api'
 import Drawing from '../../../components/Drawing'
 import StoreCategory from './store'
 import UpdatedCategory from './updated'
+<<<<<<< HEAD
 // import { Box } from '@mui/material/node_modules/@mui/system'
+=======
+>>>>>>> adac4128b02f19212f4999edef19957f61185cb5
 import Box from '@mui/material/Box'
 
 import Breadcrumbs from '@mui/material/Breadcrumbs'
@@ -254,7 +257,7 @@ export default function ControlledSelectionGrid() {
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'space-between'
+                justifyContent: 'flex-end'
               }}
             >
               <Search>
@@ -274,7 +277,8 @@ export default function ControlledSelectionGrid() {
                   sx={{
                     color: 'red',
                     borderColor: 'red',
-                    width: '100px'
+                    width: '100px',
+                    marginLeft: '10px'
                   }}
                   startIcon={<DeleteIcon />}
                   onClick={async () => {
