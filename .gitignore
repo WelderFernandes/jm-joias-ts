@@ -37,3 +37,5 @@ yarn-error.log*
 *.tsbuildinfo
 src/pages/login/index.tsx
 package-lock.json
+
+yarn.lock
