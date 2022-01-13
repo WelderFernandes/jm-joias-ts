@@ -111,7 +111,9 @@ export default function SignInSide() {
               component="form"
               noValidate
               sx={{ mt: 2 }}
-              onSubmit={handleSubmit(handleSignIn)}
+              onSubmit={() => {
+                handleSubmit(handleSignIn)
+              }}
             >
               <Box sx={{ width: '100%' }}>
                 <Collapse in={open}>
@@ -136,7 +138,11 @@ export default function SignInSide() {
                 </Collapse>
               </Box>
               <TextField
-                {...register('email')}
+                {...register('email', {
+                  required: true,
+                  min: 7,
+                  pattern: /^\S+@\S+$/i
+                })}
                 required
                 fullWidth
                 id="email"
