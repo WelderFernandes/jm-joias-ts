@@ -147,7 +147,6 @@ export default function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                type="email"
               />
               <TextField
                 {...register('password')}
