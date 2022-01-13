@@ -8,6 +8,8 @@ import { ChangeEvent, useContext, useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
 import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 import { CategoryContext } from '../../../contexts/CategoryContext'
 
@@ -15,8 +17,17 @@ type CategoryStoreProps = {
   name: string
   slug: string
   status: number
-  message: string
+  message?: string
 }
+
+const schema = yup
+  .object()
+  .shape({
+    name: yup.string().required(),
+    slug: yup.string().required(),
+    status: yup.number().required()
+  })
+  .required()
 
 function StoreCategory() {
   const { createCategories, handleAlert } = useContext(CategoryContext)
@@ -27,7 +38,9 @@ function StoreCategory() {
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm<CategoryStoreProps>({
+    resolver: yupResolver(schema) // yup, joi and even your own.
+  })
 
   const [values, setValues] = useState({})
 
@@ -67,7 +80,7 @@ function StoreCategory() {
           mt: '2rem',
           alignItems: 'center'
         }}
-        onSubmit={handleSubmit(handleStore)}
+        onSubmit={handleSubmit(data => handleStore(data))}
         autoComplete="off"
       >
         <Grid

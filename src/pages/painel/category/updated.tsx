@@ -8,7 +8,8 @@ import { ChangeEvent, useContext, useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
 import { useForm } from 'react-hook-form'
-
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import { CategoryContext } from '../../../contexts/CategoryContext'
 interface Category {
   id?: number
@@ -21,6 +22,15 @@ type CategoryUpdatedProps = {
   category: Category
 }
 
+const schema = yup
+  .object()
+  .shape({
+    name: yup.string().required(),
+    slug: yup.string().required(),
+    status: yup.number().required()
+  })
+  .required()
+
 function UpdatedCategory({ category }: CategoryUpdatedProps) {
   const { updatedCategories, handleAlert } = useContext(CategoryContext)
   const [status, setStatus] = useState('')
@@ -30,7 +40,9 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm<Category>({
+    resolver: yupResolver(schema) // yup, joi and even your own.
+  })
 
   const initialValues = {
     name: category?.name,
@@ -47,7 +59,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     setValues({ ...values, [name]: value })
   }
 
-  async function handleStore(data: Category) {
+  async function handleUpdate(data: Category) {
     setLoading(true)
 
     if (data.name === '' || data.slug === '' || data.status === null) {
@@ -77,7 +89,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
           mt: '2rem',
           alignItems: 'center'
         }}
-        onSubmit={handleSubmit(handleStore)}
+        onSubmit={handleSubmit(data => handleUpdate(data))}
         autoComplete="off"
       >
         <Grid
