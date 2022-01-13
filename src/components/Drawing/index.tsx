@@ -35,18 +35,6 @@ export default function TemporaryDrawer({
   return (
     <Container>
       <Box>
-        {/* <Fab
-          color="secondary"
-          aria-label="add"
-          onClick={toggleDrawer(anchor, true)}
-          sx={{
-            position: 'fixed',
-            bottom: '2rem',
-            right: '2rem'
-          }}
-        >
-          <AddIcon />
-        </Fab> */}
         <Drawer
           open={true}
           anchor={anchor}

@@ -23,7 +23,8 @@ import { api } from '../../../services/api'
 import Drawing from '../../../components/Drawing'
 import StoreCategory from './store'
 import UpdatedCategory from './updated'
-import { Box } from '@mui/material/node_modules/@mui/system'
+// import { Box } from '@mui/material/node_modules/@mui/system'
+import Box from '@mui/material/Box'
 
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
@@ -34,6 +35,8 @@ import SearchIcon from '@mui/icons-material/Search'
 import { localeDatagrid } from '../../../utils/localeDatagrid'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
+import { getApiClient } from '../../../services/axios'
+import ResponsiveDialog from '../../../components/Dialog'
 interface Category {
   id: number
   name: string
@@ -101,7 +104,9 @@ export default function ControlledSelectionGrid() {
   const [openDrawingUpdated, setopenDrawingUpdated] = useState(false)
   const [drawingTitle, setDrawingTitle] = useState('')
   const [drawingContent, setDrawingContent] = useState<Category>({} as Category)
-
+  const [openPopup, setOpenPopup] = useState(false)
+  const [category, setCategory] = useState<Category>({} as Category)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [rows, setRows] = useState(categories)
 
   useEffect(() => {
@@ -116,17 +121,25 @@ export default function ControlledSelectionGrid() {
     }
   }
 
-  async function handleSingleDeleteCategory(params: GridRowParams) {
+  function handlePopUp(params: GridRowParams) {
+    if (params) {
+      setOpenPopup(true)
+      setCategory(params.row as Category)
+    }
+  }
+
+  async function handleDeleteCategory() {
     await api
-      .post(`api/category/massdelete/${params.row.id}`)
+      .post(`api/category/massdelete/${category.id}`)
       .then(() => {
-        setRows(categories.filter(category => category.id !== params.row.id))
+        setRows(categories.filter(categories => categories.id !== category.id))
       })
       .catch(err => {
         console.log(err)
       })
+    setOpenPopup(false)
+    setConfirmDelete(false)
   }
-
   const columns = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
     { field: 'name', headerName: 'Nome', minWidth: 250 },
@@ -153,7 +166,7 @@ export default function ControlledSelectionGrid() {
             label="Delete"
             className="textPrimary"
             onClick={() => {
-              handleSingleDeleteCategory(params)
+              handlePopUp(params)
             }}
             sx={{ color: 'red' }}
           />
@@ -161,7 +174,6 @@ export default function ControlledSelectionGrid() {
       }
     }
   ]
-
   function handleSearch(value: string) {
     setRows(
       categories.filter(category =>
@@ -169,7 +181,6 @@ export default function ControlledSelectionGrid() {
       )
     )
   }
-
   return (
     <Layout>
       <Box maxWidth="md" sx={{ marginLeft: '5%' }}>
@@ -340,10 +351,30 @@ export default function ControlledSelectionGrid() {
           <UpdatedCategory category={drawingContent} />
         </Drawing>
       )}
+      {openPopup && (
+        <ResponsiveDialog
+          closeModal={() => setOpenPopup(false)}
+          confirm={() => {
+            handleDeleteCategory()
+          }}
+          title="DELETAR"
+          confirmText="Deletar"
+          confirmColor="red"
+        >
+          <span>
+            <b>
+              <u>{category.name}</u>
+            </b>{' '}
+            sera deletado, Tem certesa?
+          </span>
+        </ResponsiveDialog>
+      )}
     </Layout>
   )
 }
 export const getServerSideProps: GetServerSideProps = async ctx => {
+  // const apiClient = getApiClient(ctx)
+
   const { ['memeli.token']: token } = parseCookies(ctx)
   if (!token) {
     return {

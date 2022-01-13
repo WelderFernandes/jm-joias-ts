@@ -39,7 +39,6 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   const { enqueueSnackbar } = useSnackbar()
   const [update, setUpdate] = useState(false)
   const { 'memeli.token': token } = parseCookies()
-  console.log('categories', categories)
 
   useEffect(() => {
     if (token) {
@@ -61,13 +60,9 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
                 new Date(category.updated_at)
               )
             })
-            console.log('newCategory', newCategory)
           })
 
           setCategories(newCategory)
-          // console.log('token', token)
-          // console.log('update', update)
-          // console.log('categories', categories)
         })
         .catch(error => {
           enqueueSnackbar('Erro ao carregar as categorias', {
