@@ -50,6 +50,7 @@ export default function SignInSide() {
   const [open, setOpen] = useState(false)
 
   async function handleSignIn(data: Data) {
+    console.log(data)
     try {
       if (data.email === '' || data.password === '') {
         setOpen(true)
@@ -57,7 +58,7 @@ export default function SignInSide() {
         return
       }
       setLoading(true)
-      await signIn(data)
+      // await signIn(data)
     } catch (error) {
       setOpen(true)
 
@@ -135,12 +136,7 @@ export default function SignInSide() {
                 </Collapse>
               </Box>
               <TextField
-                {...register('email', {
-                  required: true,
-                  min: 7,
-                  pattern: /^\S+@\S+$/i,
-                  type: 'email'
-                })}
+                {...register('email')}
                 required
                 fullWidth
                 id="email"
