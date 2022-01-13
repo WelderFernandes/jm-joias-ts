@@ -18,6 +18,8 @@ import IconButton from '@mui/material/IconButton'
 import Collapse from '@mui/material/Collapse'
 import CloseIcon from '@mui/icons-material/Close'
 import Image from 'next/image'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 function Copyright(props: any) {
   return (
@@ -43,8 +45,19 @@ type Data = {
 
 const theme = createTheme()
 
+const schema = yup
+  .object()
+  .shape({
+    email: yup.string().email().required(),
+    password: yup.string().required()
+  })
+  .required()
+
 export default function SignInSide() {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit } = useForm<Data>({
+    resolver: yupResolver(schema) // yup, joi and even your own.
+  })
+
   const { signIn } = useContext(AuthContext)
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
@@ -111,7 +124,7 @@ export default function SignInSide() {
               component="form"
               noValidate
               sx={{ mt: 2 }}
-              onSubmit={handleSubmit(d => handleSignIn)}
+              onSubmit={handleSubmit(data => handleSignIn(data))}
             >
               <Box sx={{ width: '100%' }}>
                 <Collapse in={open}>
