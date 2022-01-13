@@ -138,7 +138,8 @@ export default function SignInSide() {
                 {...register('email', {
                   required: true,
                   min: 7,
-                  pattern: /^\S+@\S+$/i
+                  pattern: /^\S+@\S+$/i,
+                  type: 'email'
                 })}
                 required
                 fullWidth
