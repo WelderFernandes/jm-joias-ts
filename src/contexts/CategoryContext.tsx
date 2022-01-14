@@ -26,6 +26,8 @@ interface CategoryContextProps {
   categories: Category[]
   createCategories: (category: CategoryInput) => Promise<void>
   updatedCategories: (category: CategoryInput) => Promise<void>
+  deleteCategories: (id: number) => Promise<void>
+  massDeleteCategories: (ids: number[]) => Promise<void>
   handleAlert: (data: CustomAlertProps) => void
 }
 
@@ -104,13 +106,34 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     setUpdate(!update)
   }
 
+  async function deleteCategories(id: number) {
+    await api.post(`/api/category/massdelete/${id}`).then(() => {
+      setCategories(categories.filter(category => category.id !== id))
+    })
+  }
+
+  async function massDeleteCategories(id: number[]) {
+    await api.post(`/api/category/massdelete/${id}`).then(() => {
+      id.map(id => {
+        setCategories(categories.filter(cat => !categories.includes(cat)))
+      })
+    })
+  }
+
   function handleAlert({ message, variant }: CustomAlertProps) {
     enqueueSnackbar(message, { variant })
   }
 
   return (
     <CategoryContext.Provider
-      value={{ categories, createCategories, updatedCategories, handleAlert }}
+      value={{
+        categories,
+        createCategories,
+        updatedCategories,
+        deleteCategories,
+        massDeleteCategories,
+        handleAlert
+      }}
     >
       {children}
     </CategoryContext.Provider>

@@ -39,3 +39,4 @@ src/pages/login/index.tsx
 package-lock.json
 src/services/axios.tsx
 yarn.lock
+yarn.lock

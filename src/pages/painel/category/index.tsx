@@ -97,7 +97,8 @@ const theme = createTheme(
 )
 
 export default function ControlledSelectionGrid() {
-  const { categories } = useContext(CategoryContext)
+  const { categories, deleteCategories, massDeleteCategories } =
+    useContext(CategoryContext)
   const [selecteds, setSelecteds] = useState<GridSelectionModel>([])
   const [selectionModel, setSelectionModel] = useState([])
   const [openDrawingCreated, setOpenDrawingCreated] = useState(false)
@@ -112,39 +113,6 @@ export default function ControlledSelectionGrid() {
   useEffect(() => {
     setRows(categories)
   }, [categories])
-
-  function handleEditCategory(params: GridRowParams) {
-    if (params) {
-      setDrawingContent(params.row as Category)
-      setDrawingTitle('Editar Categoria')
-      setopenDrawingUpdated(true)
-    }
-  }
-
-  function handlePopUp(params?: GridRowParams, id?: GridSelectionModel) {
-    if (params) {
-      setMessage('Será excluída a categoria')
-      setOpenPopup(true)
-      setCategory(params.row as Category)
-    }
-    if (id) {
-      setMessage('Deseja realmente excluir as categorias Selecionadas?')
-      setOpenPopup(true)
-    }
-  }
-
-  async function handleDeleteCategory() {
-    await api
-      .post(`api/category/massdelete/${category.id}`)
-      .then(() => {
-        setRows(categories.filter(categories => categories.id !== category.id))
-        setCategory({} as Category)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    setOpenPopup(false)
-  }
 
   const columns = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
@@ -181,6 +149,45 @@ export default function ControlledSelectionGrid() {
     }
   ]
 
+  function handleEditCategory(params: GridRowParams) {
+    if (params) {
+      setDrawingContent(params.row as Category)
+      setDrawingTitle('Editar Categoria')
+      setopenDrawingUpdated(true)
+    }
+  }
+
+  function handlePopUp(params?: GridRowParams, id?: GridSelectionModel) {
+    if (params) {
+      setMessage('Será excluída a categoria')
+      setOpenPopup(true)
+      setCategory(params.row as Category)
+    }
+    if (id) {
+      setMessage('Deseja realmente excluir as categorias Selecionadas?')
+      setOpenPopup(true)
+    }
+  }
+
+  async function handleDeleteCategory(category: Category) {
+    await deleteCategories(category.id)
+    setRows(categories.filter(categories => categories.id !== category.id))
+    setOpenPopup(false)
+  }
+
+  async function handleDeleteCategoriesSelected() {
+    await massDeleteCategories(selecteds as number[])
+    const selectedIDs = new Set<any>(selecteds)
+    const ids: number[] = []
+
+    selectedIDs.forEach(id => {
+      ids.push(id)
+    })
+
+    setRows(categories.filter(categories => !selectedIDs.has(categories.id)))
+    setOpenPopup(false)
+  }
+
   function handleSearch(value: string) {
     setRows(
       categories.filter(category =>
@@ -189,20 +196,6 @@ export default function ControlledSelectionGrid() {
     )
   }
 
-  async function handleDeleteSelect(params: GridSelectionModel) {
-    const selectedIDs = new Set<any>(selectionModel)
-    // handleDeleteSelect(selectionModel)
-    const ids: number[] = []
-
-    selectedIDs.forEach(id => {
-      ids.push(id)
-    })
-    console.log(selectedIDs)
-    await api.post(`api/category/massdelete/${params}`).then(() => {
-      setRows(r => r.filter(x => !selectedIDs.has(x.id)))
-      setOpenPopup(false)
-    })
-  }
   return (
     <Layout>
       <Box maxWidth="md" sx={{ marginLeft: '5%' }}>
@@ -387,9 +380,9 @@ export default function ControlledSelectionGrid() {
           }}
           confirm={() => {
             if (category.id) {
-              handleDeleteCategory()
+              handleDeleteCategory(category)
             } else {
-              handleDeleteSelect(selecteds)
+              handleDeleteCategoriesSelected()
             }
           }}
           title="DELETAR"
