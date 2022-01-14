@@ -34,7 +34,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import { localeDatagrid } from '../../../utils/localeDatagrid'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
-import { getApiClient } from '../../../services/axios'
+
 import ResponsiveDialog from '../../../components/Dialog'
 interface Category {
   id: number
@@ -97,7 +97,7 @@ const theme = createTheme(
 )
 
 export default function ControlledSelectionGrid() {
-  const { categories, deleteCategories, massDeleteCategories } =
+  const { categories, deleteCategories, massDeleteCategories, handleAlert } =
     useContext(CategoryContext)
   const [selecteds, setSelecteds] = useState<GridSelectionModel>([])
   const [selectionModel, setSelectionModel] = useState([])
@@ -173,6 +173,10 @@ export default function ControlledSelectionGrid() {
     await deleteCategories(category.id)
     setRows(categories.filter(categories => categories.id !== category.id))
     setOpenPopup(false)
+    handleAlert({
+      message: 'Deletado com SUCESSO!',
+      variant: 'success'
+    })
   }
 
   async function handleDeleteCategoriesSelected() {
@@ -186,6 +190,10 @@ export default function ControlledSelectionGrid() {
 
     setRows(categories.filter(categories => !selectedIDs.has(categories.id)))
     setOpenPopup(false)
+    handleAlert({
+      message: 'Deletado com SUCESSO!',
+      variant: 'success'
+    })
   }
 
   function handleSearch(value: string) {
@@ -293,24 +301,9 @@ export default function ControlledSelectionGrid() {
                     marginLeft: '10px'
                   }}
                   startIcon={<DeleteIcon />}
-                  // onClick={handleDeleteSelect(id)}
                   onClick={() => {
                     handlePopUp(undefined, selecteds)
                   }}
-
-                  // onClick={async () => {
-                  //   const selectedIDs = new Set<any>(selectionModel)
-                  //   handleDeleteSelect(selectionModel)
-                  // const ids: number[] = []
-
-                  // selectedIDs.forEach(id => {
-                  //   ids.push(id)
-                  // })
-
-                  // await api.post(`api/category/massdelete/${ids}`)
-
-                  // setRows(r => r.filter(x => !selectedIDs.has(x.id)))
-                  // }}
                 >
                   DELETAR
                 </Button>

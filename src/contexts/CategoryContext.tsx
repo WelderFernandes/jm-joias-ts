@@ -111,12 +111,9 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
       setCategories(categories.filter(category => category.id !== id))
     })
   }
-
   async function massDeleteCategories(id: number[]) {
-    await api.post(`/api/category/massdelete/${id}`).then(() => {
-      id.map(id => {
-        setCategories(categories.filter(cat => !categories.includes(cat)))
-      })
+    await api.post(`/api/category/massdelete/${id}`).then(async () => {
+      setUpdate(!update)
     })
   }
 
