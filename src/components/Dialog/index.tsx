@@ -7,6 +7,9 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Stack from '@mui/material/Stack'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
 type DialogProps = {
   title: string
@@ -27,6 +30,7 @@ export default function ResponsiveDialog({
 }: DialogProps) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const [loading, setLoading] = useState(false)
 
   const handleClose = () => {
     closeModal && closeModal()
@@ -35,6 +39,7 @@ export default function ResponsiveDialog({
   function handleConfirm() {
     confirm && confirm()
     console.log('confirm')
+    setLoading(true)
   }
 
   return (
@@ -54,9 +59,11 @@ export default function ResponsiveDialog({
           <Button autoFocus variant="outlined" onClick={handleClose}>
             CANCELAR
           </Button>
-          <Button
+          <LoadingButton
             variant="outlined"
+            endIcon={<DeleteForeverIcon />}
             onClick={handleConfirm}
+            loading={loading}
             sx={{
               borderColor: confirmColor,
               color: confirmColor,
@@ -68,7 +75,7 @@ export default function ResponsiveDialog({
             }}
           >
             {confirmText}
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </div>

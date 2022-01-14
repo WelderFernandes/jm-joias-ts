@@ -15,7 +15,6 @@ import { CategoryContext } from '../../../contexts/CategoryContext'
 
 type CategoryStoreProps = {
   name: string
-  slug: string
   status: number
   message?: string
 }
@@ -24,7 +23,6 @@ const schema = yup
   .object()
   .shape({
     name: yup.string().required(),
-    slug: yup.string().required(),
     status: yup.number().required()
   })
   .required()
@@ -52,14 +50,13 @@ function StoreCategory() {
   }
   async function handleStore(data: CategoryStoreProps) {
     setLoading(true)
-    if (data.name === '' || data.slug === '' || data.status === null) {
+    if (data.name === '' || data.status === null) {
       setLoading(false)
       return
     }
 
     await createCategories({
       name: data.name,
-      slug: data.slug,
       status: data.status
     })
 
@@ -104,20 +101,7 @@ function StoreCategory() {
             />
             <FormHelperText error>{errors.name?.message}</FormHelperText>
           </Grid>
-          <Grid item>
-            <TextField
-              {...register('slug', { required: 'Slug é Obrigatório.' })}
-              id="outlined-basic"
-              label="Slug"
-              variant="outlined"
-              name="slug"
-              type={'text'}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChange(event)
-              }}
-            />
-            <FormHelperText error>{errors.slug?.message}</FormHelperText>
-          </Grid>
+
           <Grid item mt={0}>
             <FormControl>
               <InputLabel id="status">Status</InputLabel>

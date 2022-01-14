@@ -14,7 +14,6 @@ import { CategoryContext } from '../../../contexts/CategoryContext'
 interface Category {
   id?: number
   name?: string
-  slug?: string
   status?: string
 }
 
@@ -26,7 +25,6 @@ const schema = yup
   .object()
   .shape({
     name: yup.string().required(),
-    slug: yup.string().required(),
     status: yup.number().required()
   })
   .required()
@@ -46,7 +44,6 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
 
   const initialValues = {
     name: category?.name,
-    slug: category?.slug,
     status: category?.status == 'Ativo' ? '1' : '0'
   }
 
@@ -62,7 +59,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
   async function handleUpdate(data: Category) {
     setLoading(true)
 
-    if (data.name === '' || data.slug === '' || data.status === null) {
+    if (data.name === '' || data.status === null) {
       setLoading(false)
       return
     }
@@ -70,7 +67,6 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     await updatedCategories({
       id: data.id,
       name: data?.name as string,
-      slug: data?.slug as string,
       status: data?.status
     })
     handleAlert({
@@ -121,22 +117,6 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
               }}
             />
             <FormHelperText error>{errors.name?.message}</FormHelperText>
-          </Grid>
-          <Grid item>
-            <TextField
-              {...register('slug', { required: 'Slug é Obrigatório.' })}
-              id="outlined-basic"
-              label="Slug"
-              focused
-              defaultValue={category?.slug}
-              variant="outlined"
-              name="slug"
-              type={'text'}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChange(event)
-              }}
-            />
-            <FormHelperText error>{errors.slug?.message}</FormHelperText>
           </Grid>
           <Grid item mt={0}>
             <FormControl>

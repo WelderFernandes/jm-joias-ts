@@ -39,7 +39,6 @@ import ResponsiveDialog from '../../../components/Dialog'
 interface Category {
   id: number
   name: string
-  slug: string
   status: string
   updated_at: string
   created_at: string
@@ -87,6 +86,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     }
   }
 }))
+
 const theme = createTheme(
   {
     palette: {
@@ -95,9 +95,10 @@ const theme = createTheme(
   },
   ptBR
 )
+
 export default function ControlledSelectionGrid() {
   const { categories } = useContext(CategoryContext)
-  const [selected, setSelected] = useState<GridSelectionModel>([])
+  const [selecteds, setSelecteds] = useState<GridSelectionModel>([])
   const [selectionModel, setSelectionModel] = useState([])
   const [openDrawingCreated, setOpenDrawingCreated] = useState(false)
   const [openDrawingUpdated, setopenDrawingUpdated] = useState(false)
@@ -105,8 +106,8 @@ export default function ControlledSelectionGrid() {
   const [drawingContent, setDrawingContent] = useState<Category>({} as Category)
   const [openPopup, setOpenPopup] = useState(false)
   const [category, setCategory] = useState<Category>({} as Category)
-  const [confirmDelete, setConfirmDelete] = useState(false)
   const [rows, setRows] = useState(categories)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     setRows(categories)
@@ -120,10 +121,15 @@ export default function ControlledSelectionGrid() {
     }
   }
 
-  function handlePopUp(params: GridRowParams) {
+  function handlePopUp(params?: GridRowParams, id?: GridSelectionModel) {
     if (params) {
+      setMessage('Será excluída a categoria')
       setOpenPopup(true)
       setCategory(params.row as Category)
+    }
+    if (id) {
+      setMessage('Deseja realmente excluir as categorias Selecionadas?')
+      setOpenPopup(true)
     }
   }
 
@@ -132,13 +138,14 @@ export default function ControlledSelectionGrid() {
       .post(`api/category/massdelete/${category.id}`)
       .then(() => {
         setRows(categories.filter(categories => categories.id !== category.id))
+        setCategory({} as Category)
       })
       .catch(err => {
         console.log(err)
       })
     setOpenPopup(false)
-    setConfirmDelete(false)
   }
+
   const columns = [
     { field: 'id', headerName: 'ID', minWidth: 100 },
     { field: 'name', headerName: 'Nome', minWidth: 250 },
@@ -173,12 +180,28 @@ export default function ControlledSelectionGrid() {
       }
     }
   ]
+
   function handleSearch(value: string) {
     setRows(
       categories.filter(category =>
-        category.name.toLocaleLowerCase().includes(value)
+        category.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())
       )
     )
+  }
+
+  async function handleDeleteSelect(params: GridSelectionModel) {
+    const selectedIDs = new Set<any>(selectionModel)
+    // handleDeleteSelect(selectionModel)
+    const ids: number[] = []
+
+    selectedIDs.forEach(id => {
+      ids.push(id)
+    })
+    console.log(selectedIDs)
+    await api.post(`api/category/massdelete/${params}`).then(() => {
+      setRows(r => r.filter(x => !selectedIDs.has(x.id)))
+      setOpenPopup(false)
+    })
   }
   return (
     <Layout>
@@ -266,7 +289,7 @@ export default function ControlledSelectionGrid() {
                   onChange={e => handleSearch(e.target.value)}
                 />
               </Search>
-              {selected.length > 0 && (
+              {selecteds.length > 0 && (
                 <Button
                   size="small"
                   variant="outlined"
@@ -277,18 +300,24 @@ export default function ControlledSelectionGrid() {
                     marginLeft: '10px'
                   }}
                   startIcon={<DeleteIcon />}
-                  onClick={async () => {
-                    const selectedIDs = new Set<any>(selectionModel)
-
-                    const ids: number[] = []
-
-                    selectedIDs.forEach(id => {
-                      ids.push(id)
-                    })
-
-                    await api.post(`api/category/massdelete/${ids}`)
-                    setRows(r => r.filter(x => !selectedIDs.has(x.id)))
+                  // onClick={handleDeleteSelect(id)}
+                  onClick={() => {
+                    handlePopUp(undefined, selecteds)
                   }}
+
+                  // onClick={async () => {
+                  //   const selectedIDs = new Set<any>(selectionModel)
+                  //   handleDeleteSelect(selectionModel)
+                  // const ids: number[] = []
+
+                  // selectedIDs.forEach(id => {
+                  //   ids.push(id)
+                  // })
+
+                  // await api.post(`api/category/massdelete/${ids}`)
+
+                  // setRows(r => r.filter(x => !selectedIDs.has(x.id)))
+                  // }}
                 >
                   DELETAR
                 </Button>
@@ -321,9 +350,8 @@ export default function ControlledSelectionGrid() {
               columns={columns}
               disableSelectionOnClick={true}
               checkboxSelection
-              onSelectionModelChange={ids => {
-                setSelected(ids)
-                setSelectionModel(ids as any)
+              onSelectionModelChange={(selected: GridSelectionModel) => {
+                setSelecteds(selected)
               }}
               sx={{
                 height: '100vh'
@@ -353,19 +381,27 @@ export default function ControlledSelectionGrid() {
       )}
       {openPopup && (
         <ResponsiveDialog
-          closeModal={() => setOpenPopup(false)}
+          closeModal={() => {
+            setOpenPopup(false)
+            setCategory({} as Category)
+          }}
           confirm={() => {
-            handleDeleteCategory()
+            if (category.id) {
+              handleDeleteCategory()
+            } else {
+              handleDeleteSelect(selecteds)
+            }
           }}
           title="DELETAR"
           confirmText="Deletar"
           confirmColor="red"
         >
           <span>
+            {message}
             <b>
-              <u>{category.name}</u>
-            </b>{' '}
-            sera deletado, Tem certesa?
+              {' '}
+              <u>{category?.name}</u>
+            </b>
           </span>
         </ResponsiveDialog>
       )}

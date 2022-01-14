@@ -11,7 +11,6 @@ interface CustomAlertProps {
 interface Category {
   id?: number
   name: string
-  slug: string
   status: any
   updated_at: string
   created_at: string
@@ -51,7 +50,6 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
             newCategory.push({
               id: category.id,
               name: category.name,
-              slug: category.slug,
               status: category.status == 1 ? 'Ativo' : 'Inativo',
               updated_at: new Intl.DateTimeFormat('pt-BR').format(
                 new Date(category.updated_at)
@@ -72,36 +70,9 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     }
   }, [token, update])
 
-  // useEffect(() => {
-  //   const { 'memeli.token': token } = parseCookies()
-
-  //   if (token) {
-  //     api.get('/api/category').then(response => {
-  //       const newCategory: Array<Category> = []
-  //       const data: Array<any> = response.data.data
-  //       data.map(category => {
-  //         newCategory.push({
-  //           id: category.id,
-  //           name: category.name,
-  //           slug: category.slug,
-  //           status: category.status == 1 ? 'Ativo' : 'Inativo',
-  //           updated_at: new Intl.DateTimeFormat('pt-BR').format(
-  //             new Date(category.updated_at)
-  //           ),
-  //           created_at: new Intl.DateTimeFormat('pt-BR').format(
-  //             new Date(category.updated_at)
-  //           )
-  //         })
-  //       })
-  //       setCategories(newCategory)
-  //     })
-  //   }
-  // }, [update])
-
   async function createCategories(categoryInput: CategoryInput) {
     const response = await api.post('/api/category/store', {
       name: categoryInput.name,
-      slug: categoryInput.slug,
       status: categoryInput.status == 1 ? '1' : '0'
     })
 
@@ -110,7 +81,6 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     const category = {
       id: data.id,
       name: data.name,
-      slug: data.slug,
       status: data.status == 1 ? 'Ativo' : 'Inativo',
       updated_at: new Intl.DateTimeFormat('pt-BR').format(
         new Date(data.updated_at)
@@ -126,7 +96,6 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   async function updatedCategories(categoryInput: CategoryInput) {
     const response = await api.put(`/api/category/${categoryInput.id}`, {
       name: categoryInput.name,
-      slug: categoryInput.slug,
       status: categoryInput.status === 1 ? '1' : '0'
     })
 
