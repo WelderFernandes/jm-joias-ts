@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useContext,
-  useState,
-  forwardRef,
-  InputHTMLAttributes
-} from 'react'
+import { useEffect, useContext, useState } from 'react'
 import {
   DataGrid,
   GridSelectionModel,
@@ -16,11 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import AddIcon from '@mui/icons-material/Add'
 import { styled, alpha } from '@mui/material/styles'
-import { Layout } from '../../../components/Layout'
 import { Button, Stack, Typography } from '@mui/material'
-import { CategoryContext } from '../../../contexts/CategoryContext'
-import { api } from '../../../services/api'
-import Drawing from '../../../components/Drawing'
 import StoreCategory from './store'
 import UpdatedCategory from './updated'
 import Box from '@mui/material/Box'
@@ -31,11 +21,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { ptBR } from '@mui/material/locale'
 import InputBase from '@mui/material/InputBase'
 import SearchIcon from '@mui/icons-material/Search'
-import { localeDatagrid } from '../../../utils/localeDatagrid'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 
-import ResponsiveDialog from '../../../components/Dialog'
+import ResponsiveDialog from '../../../../components/Dialog'
+import { Layout } from '../../../../components/Layout'
+import { CategoryContext } from '../../../../contexts/CategoryContext'
+import Drawing from '../../../../components/Drawing'
+import { api } from '../../../../services/api'
+import { localeDatagrid } from '../../../../utils/localeDatagrid'
+
 interface Category {
   id: number
   name: string
@@ -224,7 +219,9 @@ export default function ControlledSelectionGrid() {
             <Link underline="hover" color="inherit" href="/painel">
               Painel
             </Link>
-
+            <Link underline="hover" color="inherit" href="/#">
+              pré-cadastros
+            </Link>
             <Link
               underline="hover"
               color="text.primary"

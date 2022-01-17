@@ -10,8 +10,10 @@ import { LoadingButton } from '@mui/lab'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { CategoryContext } from '../../../../contexts/CategoryContext'
+import { pt } from 'yup-locale-pt'
 
-import { CategoryContext } from '../../../contexts/CategoryContext'
+yup.setLocale(pt)
 
 type CategoryStoreProps = {
   name: string

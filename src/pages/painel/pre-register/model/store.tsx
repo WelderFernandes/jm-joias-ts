@@ -1,4 +1,4 @@
-import { Box, FormHelperText, Grid } from '@mui/material'
+import { Box, FormHelperText, Grid, useFormControl } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -10,15 +10,15 @@ import { LoadingButton } from '@mui/lab'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { CategoryContext } from '../../../contexts/CategoryContext'
-interface Category {
-  id?: number
-  name?: string
-  status?: string
-}
+import { CategoryContext } from '../../../../contexts/CategoryContext'
+import { pt } from 'yup-locale-pt'
 
-type CategoryUpdatedProps = {
-  category: Category
+yup.setLocale(pt)
+
+type CategoryStoreProps = {
+  name: string
+  status: number
+  message?: string
 }
 
 const schema = yup
@@ -29,8 +29,8 @@ const schema = yup
   })
   .required()
 
-function UpdatedCategory({ category }: CategoryUpdatedProps) {
-  const { updatedCategories, handleAlert } = useContext(CategoryContext)
+function StoreCategory() {
+  const { createCategories, handleAlert } = useContext(CategoryContext)
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
   const {
@@ -38,16 +38,11 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm<Category>({
+  } = useForm<CategoryStoreProps>({
     resolver: yupResolver(schema) // yup, joi and even your own.
   })
 
-  const initialValues = {
-    name: category?.name,
-    status: category?.status == 'Ativo' ? '1' : '0'
-  }
-
-  const [values, setValues] = useState<Category>(initialValues)
+  const [values, setValues] = useState({})
 
   const handleChange = (event: SelectChangeEvent) => {
     const { name, value } = event.target
@@ -55,27 +50,26 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
 
     setValues({ ...values, [name]: value })
   }
-
-  async function handleUpdate(data: Category) {
+  async function handleStore(data: CategoryStoreProps) {
     setLoading(true)
-
     if (data.name === '' || data.status === null) {
       setLoading(false)
       return
     }
 
-    await updatedCategories({
-      id: data.id,
-      name: data?.name as string,
-      status: data?.status
+    await createCategories({
+      name: data.name,
+      status: data.status
     })
+
     handleAlert({
-      message: 'Categoria atualizado com sucesso!',
+      message: 'Categoria cadastrada com sucesso!',
       variant: 'success'
     })
     reset()
     setLoading(false)
   }
+
   return (
     <Box mt={12}>
       <Box
@@ -85,7 +79,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
           mt: '2rem',
           alignItems: 'center'
         }}
-        onSubmit={handleSubmit(data => handleUpdate(data))}
+        onSubmit={handleSubmit(data => handleStore(data))}
         autoComplete="off"
       >
         <Grid
@@ -95,21 +89,12 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
           spacing={1}
           mb={4}
         >
-          <input
-            {...register('id', { required: 'Nome é Obrigatório.' })}
-            type="hidden"
-            name="id"
-            value={category?.id}
-          />
-
           <Grid item>
             <TextField
               {...register('name', { required: 'Nome é Obrigatório.' })}
               id="name"
               name="name"
-              focused
               label="Nome"
-              defaultValue={category?.name}
               variant="outlined"
               type={'text'}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -118,6 +103,7 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
             />
             <FormHelperText error>{errors.name?.message}</FormHelperText>
           </Grid>
+
           <Grid item mt={0}>
             <FormControl>
               <InputLabel id="status">Status</InputLabel>
@@ -126,14 +112,14 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
                 labelId="status"
                 id="status"
                 onChange={handleChange}
+                value={status}
                 name="status"
-                value={values?.status}
                 label="Status"
                 sx={{
                   width: '14rem'
                 }}
               >
-                <MenuItem disabled>
+                <MenuItem disabled value="">
                   <em>Status</em>
                 </MenuItem>
                 <MenuItem value={1} divider>
@@ -170,4 +156,4 @@ function UpdatedCategory({ category }: CategoryUpdatedProps) {
   )
 }
 
-export default UpdatedCategory
+export default StoreCategory

@@ -4,6 +4,7 @@ import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'
 import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRounded'
 import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded'
 import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate'
+import ModelTrainingIcon from '@mui/icons-material/ModelTraining'
 
 export const SidebarItems = [
   {
@@ -16,11 +17,7 @@ export const SidebarItems = [
     icon: <ProductionQuantityLimitsRoundedIcon />,
     url: '/painel/product'
   },
-  {
-    name: 'Categoria',
-    icon: <CategoryRoundedIcon />,
-    url: '/painel/category'
-  },
+
   {
     name: 'Revendedor',
     icon: <StorefrontRoundedIcon />,
@@ -37,9 +34,9 @@ export const SidebarItems = [
     url: '#',
     submenu: [
       {
-        name: 'Produtos',
-        url: '/painel/pre-register/product',
-        icon: <ProductionQuantityLimitsRoundedIcon />
+        name: 'Modelos',
+        url: '/painel/pre-register/model',
+        icon: <ModelTrainingIcon />
       },
       {
         name: 'Categoria',

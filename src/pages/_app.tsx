@@ -12,6 +12,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { AuthProvider } from '../contexts/AuthContext'
 import { CategoryProvider } from '../contexts/CategoryContext'
+import { ModelProvider } from '../contexts/ModelContext'
 // import { DrawerProvider } from '../contexts/DrawingContext'
 import { SnackbarProvider } from 'notistack'
 import { GetServerSideProps } from 'next'
@@ -111,9 +112,9 @@ export default function MyApp(props: MyAppProps) {
           <CssBaseline />
           <SnackbarProvider maxSnack={3}>
             <CategoryProvider>
-              {/* <DrawerProvider> */}
-              <Component {...pageProps} />
-              {/* </DrawerProvider> */}
+              <ModelProvider>
+                <Component {...pageProps} />
+              </ModelProvider>
             </CategoryProvider>
           </SnackbarProvider>
         </ThemeProvider>
