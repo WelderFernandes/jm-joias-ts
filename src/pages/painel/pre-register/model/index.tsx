@@ -369,8 +369,11 @@ export default function ControlledSelectionGrid() {
           confirm={() => {
             if (models.id) {
               handleDeleteModel(models)
+              setModels({} as Model)
             } else {
               handleDeleteModelsSelected()
+            setModels({} as Model)
+
             }
           }}
           title="DELETAR"

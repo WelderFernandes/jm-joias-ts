@@ -371,8 +371,10 @@ export default function ControlledSelectionGrid() {
           confirm={() => {
             if (category.id) {
               handleDeleteCategory(category)
+              setCategory({} as Category)
             } else {
               handleDeleteCategoriesSelected()
+              setCategory({} as Category)
             }
           }}
           title="DELETAR"
