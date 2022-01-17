@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { CategoryContext } from '../../../../contexts/CategoryContext'
-import { ptShort } from 'yup-locale-pt'
+import { pt } from 'yup-locale-pt'
 
-yup.setLocale(ptShort)
+yup.setLocale(pt)
 
 type CategoryStoreProps = {
   name: string
