@@ -67,11 +67,11 @@ function UpdatedCaterer({ caterer }: CatererUpdatedProps) {
       return
     }
 
-    await updated({
-      id: data.id,
-      name: data?.name as string,
-      status: data?.status
-    })
+    // await updated({
+    //   id: data.id,
+    //   name: data?.name as string,
+    //   status: data?.status
+    // })
     handleAlert({
       message: 'Caterero atualizado com sucesso!',
       variant: 'success'
