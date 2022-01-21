@@ -5,6 +5,7 @@ import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRound
 import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded'
 import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate'
 import ModelTrainingIcon from '@mui/icons-material/ModelTraining'
+import HailIcon from '@mui/icons-material/Hail'
 
 export const SidebarItems = [
   {
@@ -42,6 +43,11 @@ export const SidebarItems = [
         name: 'Categoria',
         url: '/painel/pre-register/category',
         icon: <CategoryRoundedIcon />
+      },
+      {
+        name: 'Fornecedor',
+        url: '/painel/pre-register/caterer',
+        icon: <HailIcon />
       }
     ]
   }

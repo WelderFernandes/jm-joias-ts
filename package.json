@@ -21,7 +21,9 @@
     "@mui/system": "^5.2.5",
     "@mui/x-data-grid": "^5.2.1",
     "@mui/x-data-grid-generator": "^5.2.1",
+    "@types/react-input-mask": "^3.0.1",
     "axios": "^0.24.0",
+    "cep-promise": "^4.1.1",
     "cors": "^2.8.5",
     "date-fns": "^2.27.0",
     "express": "^4.17.2",
@@ -31,6 +33,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.22.5",
+    "react-input-mask": "^2.0.4",
     "yup": "^0.32.11",
     "yup-locale-pt": "^0.0.9"
   },

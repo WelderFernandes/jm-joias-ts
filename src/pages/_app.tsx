@@ -13,10 +13,11 @@ import '@fontsource/roboto/700.css'
 import { AuthProvider } from '../contexts/AuthContext'
 import { CategoryProvider } from '../contexts/CategoryContext'
 import { ModelProvider } from '../contexts/ModelContext'
+import { CatererProvider } from '../contexts/CatererContext'
 // import { DrawerProvider } from '../contexts/DrawingContext'
 import { SnackbarProvider } from 'notistack'
-import { GetServerSideProps } from 'next'
-import { parseCookies } from 'nookies'
+// import { GetServerSideProps } from 'next'
+// import { parseCookies } from 'nookies'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -113,7 +114,9 @@ export default function MyApp(props: MyAppProps) {
           <SnackbarProvider maxSnack={3}>
             <CategoryProvider>
               <ModelProvider>
-                <Component {...pageProps} />
+                <CatererProvider>
+                  <Component {...pageProps} />
+                </CatererProvider>
               </ModelProvider>
             </CategoryProvider>
           </SnackbarProvider>
