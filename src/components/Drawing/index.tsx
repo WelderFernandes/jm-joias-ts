@@ -11,6 +11,7 @@ type DrawingProps = {
   children: ReactNode
   anchor: Anchor
   title?: string
+  width?: string
   onClose?: () => void
 }
 
@@ -18,6 +19,7 @@ export default function TemporaryDrawer({
   children,
   anchor,
   title,
+  width = '22rem',
   onClose
 }: DrawingProps) {
   const [state, setState] = useState({
@@ -51,7 +53,7 @@ export default function TemporaryDrawer({
               display: 'flex',
               justifyContent: 'stretch',
               alignItems: 'center',
-              minWidth: '22rem'
+              minWidth: width
             }}
           >
             <Box>

@@ -347,6 +347,7 @@ export default function ControlledSelectionGrid() {
           anchor="right"
           title="Cadastro de categoria"
           onClose={() => setOpenDrawingCreated(false)}
+          width="33rem"
         >
           <StoreCaterer />
         </Drawing>
