@@ -4,25 +4,21 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { ChangeEvent, useContext, useEffect, useState, useRef } from 'react'
+import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
 import Container from '@mui/material/Container'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+import * as yup from 'yup'
 import { CategoryContext } from '../../../../contexts/CategoryContext'
 import Input from '@mui/material/Input'
 
 import { pt } from 'yup-locale-pt'
 import cep from 'cep-promise'
 import MaskInput from '../../../../components/MaskInput'
-import { Form } from '@unform/web'
-import InputMask from '../../../../components/InputMask/Index'
-import InputSimple from '../../../../components/InputSimple'
-import { Scope, SubmitHandler, FormHandles } from '@unform/core'
 
-Yup.setLocale(pt)
+yup.setLocale(pt)
 
 type AdressStoreProps = {
   street: string
@@ -41,9 +37,16 @@ type CatererProps = {
   message?: string
   address?: AdressStoreProps
 }
-type ErrorMessage = {
-  [key: string]: string
-}
+
+const schema = yup
+  .object()
+  .shape({
+    name: yup.string().required(),
+    cnpj: yup.number().required(),
+    status: yup.number().required()
+  })
+  .required()
+
 function StoreCategory() {
   const { createCategories, handleAlert } = useContext(CategoryContext)
   const [status, setStatus] = useState('')
@@ -52,16 +55,15 @@ function StoreCategory() {
   const [cnpj, setCnpj] = useState('')
   const [phone, setPhone] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
-  // const {
-  //   register,
-  //   // handleSubmit,
-  //   reset,
-  //   formState: { errors }
-  // } = useForm<CatererProps>({
-  //   resolver: yupResolver(schema) // yup, joi and even your own.
-  // })
-
-  const formRef = useRef<FormHandles>(null)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<CatererProps>({
+    resolver: yupResolver(schema) // yup, joi and even your own.
+  })
+  const { onChange } = register('cnpj')
 
   const [values, setValues] = useState<CatererProps>({
     name: '',
@@ -86,22 +88,22 @@ function StoreCategory() {
   }
 
   async function handleStore(data: CatererProps) {
-    // setLoading(true)
-    // if (data.name === '' || data.status === null) {
-    //   setLoading(false)
-    //   return
-    // }
-    // try {
-    //   await createCategories({
-    //     name: data.name,
-    //     status: data.status
-    //   })
-    //   handleAlert({
-    //     message: 'Categoria cadastrada com sucesso!',
-    //     variant: 'success'
-    //   })
-    //   reset()
-    // } catch (error) {}
+    setLoading(true)
+    if (data.name === '' || data.status === null) {
+      setLoading(false)
+      return
+    }
+    try {
+      await createCategories({
+        name: data.name,
+        status: data.status
+      })
+      handleAlert({
+        message: 'Categoria cadastrada com sucesso!',
+        variant: 'success'
+      })
+      reset()
+    } catch (error) {}
 
     setLoading(false)
   }
@@ -152,68 +154,23 @@ function StoreCategory() {
       }
     }
   }
-
-  async function handleSubmit(data: FormData, { reset }: any) {
-    setValues(data)
-    console.log('values', values)
-    try {
-      const schema = Yup.object()
-        .shape({
-          name: Yup.string().required(),
-          phone: Yup.string().required(),
-          whatsapp: Yup.string().required(),
-          zipCode: Yup.string().required(),
-          cnpj: Yup.string().required(),
-          status: Yup.number().required(),
-          address: Yup.object().shape({
-            street: Yup.string().required(),
-            number: Yup.string().required(),
-            district: Yup.string().required(),
-            city: Yup.string().required(),
-            state: Yup.string().required()
-          })
-        })
-        .required()
-
-      await schema.validate(data, {
-        abortEarly: false
-      })
-
-      formRef.current?.setErrors({})
-      reset()
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errorMessages = {} as ErrorMessage
-
-        err.inner.forEach(error => {
-          if (typeof error.path !== 'undefined') {
-            errorMessages[error.path] = error.message
-          }
-        })
-
-        formRef.current?.setErrors(errorMessages)
-      }
-    }
-  }
-
-  // const inititalData = {
-  //   name: '',
-  //   status: 0,
-  //   cnpj: '',
-  //   message: '',
-  //   address: {
-  //     street: '',
-  //     number: '',
-  //     district: '',
-  //     city: '',
-  //     state: '',
-  //     zipCode: ''
-  //   } as AdressStoreProps
-  // }
-
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit} initialData={values}>
+      <Box
+        component="form"
+        sx={{
+          margin: '0 auto',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 1rem',
+          minHeight: '100vh'
+        }}
+        onSubmit={handleSubmit(data => console.log(data))}
+        autoComplete="off"
+      >
         <Box
           sx={{
             width: '100%',
@@ -249,10 +206,23 @@ function StoreCategory() {
                 sx={{ m: 1, width: '100%' }}
                 variant="standard"
               >
-                <InputMask mask="99.999.999/9999-99" name="cnpj" label="Cnpj" />
+                <MaskInput
+                  mask="99.999.999/9999-99"
+                  value={cnpj}
+                  placeholder="CNPJ"
+                  onChange={event => {
+                    setCnpj(event.target.value)
+                    handleCnpj(event)
+                    onChange
+                  }}
+                >
+                  {(inputProps: any) => (
+                    <TextField id="cnpj" name="cnpj" label="CNPJ" />
+                  )}
+                </MaskInput>
+                <FormHelperText error>{errors.cnpj?.message}</FormHelperText>
               </FormControl>
             </Grid>
-
             <Grid item xs={11} mx={2} sx={{ gridArea: 'status' }}>
               <FormControl
                 fullWidth
@@ -261,6 +231,7 @@ function StoreCategory() {
               >
                 <InputLabel id="status">Status</InputLabel>
                 <Select
+                  {...register('status')}
                   labelId="status"
                   id="status"
                   onChange={handleChange}
@@ -279,9 +250,9 @@ function StoreCategory() {
                   </MenuItem>
                   <MenuItem value={0}>Inativo</MenuItem>
                 </Select>
+                <FormHelperText error>{errors.status?.message}</FormHelperText>
               </FormControl>
             </Grid>
-
             <Grid
               item
               xs={12}
@@ -295,8 +266,14 @@ function StoreCategory() {
                 sx={{ m: 1, width: '100%' }}
                 variant="standard"
               >
-                <InputSimple name="name" label="Nome" variant="outlined" />
-                {/* <TextField name="name" label="Nome" /> */}
+                <TextField
+                  {...register('name')}
+                  label="Nome"
+                  name="name"
+                  value={values?.name}
+                  sx={{ width: '100%' }}
+                />
+                <FormHelperText error>{errors.name?.message}</FormHelperText>
               </FormControl>
             </Grid>
 
@@ -306,11 +283,18 @@ function StoreCategory() {
                 sx={{ m: 1, width: '100%' }}
                 variant="standard"
               >
-                <InputMask
+                <MaskInput
                   mask="(99) 99999-9999"
-                  name="phone"
-                  label="Telefone"
-                />
+                  placeholder="(99) 99999-9999"
+                  value={phone}
+                  onChange={event => {
+                    setPhone(event.target.value)
+                  }}
+                >
+                  {(inputProps: any) => (
+                    <TextField id="phone" name="phone" label="Telefone" />
+                  )}
+                </MaskInput>
               </FormControl>
             </Grid>
 
@@ -320,93 +304,107 @@ function StoreCategory() {
                 sx={{ m: 1, width: '100%' }}
                 variant="standard"
               >
-                <InputMask
+                <MaskInput
                   mask="(99) 99999-9999"
-                  name="whatsapp"
-                  label="Whatsapp"
+                  placeholder="(99) 99999-9999"
+                  value={whatsapp}
+                  onChange={event => {
+                    setWhatsapp(event.target.value)
+                  }}
+                >
+                  {(inputProps: any) => (
+                    <TextField id="whatsapp" name="whatsapp" label="Whatsapp" />
+                  )}
+                </MaskInput>
+              </FormControl>
+            </Grid>
+            <Grid item xs={11} mx={2} sx={{ gridArea: 'cep' }}>
+              <FormControl
+                fullWidth
+                sx={{ m: 1, width: '100%' }}
+                variant="standard"
+              >
+                <MaskInput
+                  mask="99999-999"
+                  placeholder="00000-000"
+                  value={zipCode && zipCode}
+                  onChange={event => {
+                    setZipCode(event.target.value)
+                    handleCep(event)
+                  }}
+                >
+                  {(inputProps: any) => (
+                    <TextField id="zipCode" name="zipCode" label="CEP" />
+                  )}
+                </MaskInput>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={11} mx={2} sx={{ gridArea: 'street' }}>
+              <FormControl
+                fullWidth
+                sx={{ m: 1, width: '100%' }}
+                variant="standard"
+              >
+                <TextField
+                  label="Rua"
+                  name="street"
+                  value={values.address?.street}
+                  sx={{ width: '100%' }}
                 />
               </FormControl>
             </Grid>
 
-            <Scope path="address">
-              <Grid item xs={11} mx={2} sx={{ gridArea: 'cep' }}>
-                <FormControl
-                  fullWidth
-                  sx={{ m: 1, width: '100%' }}
-                  variant="standard"
-                >
-                  <InputMask mask="9999-999" name="zipCode" label="Cep" />
-                </FormControl>
-              </Grid>
+            <Grid item xs={11} mx={2} sx={{ gridArea: 'number' }}>
+              <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
+                <TextField
+                  label="Número"
+                  name="number"
+                  value={values.address?.number}
+                  sx={{ width: '100%' }}
+                />
+              </FormControl>
+            </Grid>
 
-              <Grid item xs={11} mx={2} sx={{ gridArea: 'street' }}>
-                <FormControl
-                  fullWidth
-                  sx={{ m: 1, width: '100%' }}
-                  variant="standard"
-                >
-                  <InputSimple
-                    name="street"
-                    label="Rua"
-                    variant="outlined"
-                    value={values.address?.street}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={11} mx={2} sx={{ gridArea: 'number' }}>
-                <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                  <InputSimple
-                    name="number"
-                    label="Número"
-                    variant="outlined"
-                    value={values.address?.number}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={11} mx={2} sx={{ gridArea: 'city' }}>
-                <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                  <InputSimple
-                    name="city"
-                    label="Cidade"
-                    variant="outlined"
-                    value={values.address?.city}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={11} mx={2} sx={{ gridArea: 'state' }}>
-                <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
-                  <InputSimple
-                    name="state"
-                    label="Estado"
-                    variant="outlined"
-                    value={values.address?.state}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Box sx={{ gridArea: 'footer' }}>
-                <LoadingButton
-                  type="submit"
-                  endIcon={<SaveIcon />}
-                  loading={loading}
-                  loadingPosition="end"
-                  variant="contained"
-                  color="success"
-                  size="large"
-                  sx={{
-                    width: '100%'
-                  }}
-                >
-                  Salvar
-                </LoadingButton>
-              </Box>
-            </Scope>
+            <Grid item xs={11} mx={2} sx={{ gridArea: 'city' }}>
+              <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
+                <TextField
+                  label="Cidade"
+                  name="city"
+                  value={values.address?.city}
+                  sx={{ width: '100%' }}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={11} mx={2} sx={{ gridArea: 'state' }}>
+              <FormControl sx={{ m: 1, width: '100%' }} variant="standard">
+                <TextField
+                  label="Estado"
+                  name="state"
+                  value={values.address?.state}
+                  sx={{ width: '100%' }}
+                />
+              </FormControl>
+            </Grid>
+            <Box sx={{ gridArea: 'footer' }}>
+              <LoadingButton
+                type="submit"
+                endIcon={<SaveIcon />}
+                loading={loading}
+                loadingPosition="end"
+                variant="contained"
+                color="success"
+                size="large"
+                sx={{
+                  width: '100%'
+                }}
+              >
+                Salvar
+              </LoadingButton>
+            </Box>
           </Box>
         </Box>
-      </Form>
+      </Box>
     </>
   )
 }

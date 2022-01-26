@@ -4,8 +4,7 @@ import { parseCookies } from 'nookies'
 export function getApiClient(ctx?: any) {
   const { 'memeli.token': token } = parseCookies(ctx)
 
-  const baseURL = 'https://jm-joias.rmsolucoestecnologicas.com.br'
-  console.log(baseURL)
+  const baseURL = 'http://jm-joias.rmsolucoestecnologicas.com.br'
   const api = axios.create({
     baseURL: baseURL
   })
